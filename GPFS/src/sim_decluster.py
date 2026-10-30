@@ -32,7 +32,12 @@ def run(N=60, W=10, D=6000, seed=1, k=8):
                 ratio=float(conv_max/dec_max), dec_mean=float(load[1:].mean()), conv_survivor_mean=float(conv[:W-1].mean()),
                 dec_load=load[1:].tolist(), conv_load=list(conv[:W-1])+[conv_spare])
 if __name__ == "__main__":
+    import json
+    from paths import DATA
+    summary = {}                # what scene s6 reads; per-disk loads only for the N=60 chart
     for N in (30, 60, 120):
         r = run(N=N)
         print(N, {k: (round(v,3) if isinstance(v,float) else v) for k,v in r.items() if k not in ('dec_load','conv_load')})
-    import json; json.dump(run(N=60), open('sim_n60.json','w'))
+        summary[str(N)] = {k: r[k] for k in ('conv_max', 'dec_max', 'ratio') + (('dec_load', 'conv_load') if N == 60 else ())}
+        if N == 60: json.dump(r, open(DATA / 'sim_n60.json', 'w'))
+    json.dump(summary, open(DATA / 'sim_summary.json', 'w'))

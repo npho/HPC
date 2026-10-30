@@ -1,6 +1,7 @@
 import sys, os, time, subprocess, json, math
 import numpy as np
 from common import *
+from paths import build_dir
 
 def render_scene(sid, fps, scale, preset, crf, out, max_frames=None):
     T = load_timing()
@@ -31,4 +32,4 @@ if __name__ == '__main__':
     fps = int(sys.argv[2]); scale = float(sys.argv[3]); preset = sys.argv[4]; crf = int(sys.argv[5])
     mx = int(sys.argv[6]) if len(sys.argv) > 6 else None
     for sid in sids:
-        render_scene(sid, fps, scale, preset, crf, f'out/{sid}_{scale}_{preset}.mp4', mx)
+        render_scene(sid, fps, scale, preset, crf, str(build_dir('video') / f'{sid}_{scale}_{preset}.mp4'), mx)

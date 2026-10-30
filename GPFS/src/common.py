@@ -1,12 +1,12 @@
-import json, os, sys
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import json
+from paths import DATA
 from script import SCRIPT
 import skia
 from fx import *
 
 def load_timing():
-    if os.path.exists('timing.json'):
-        return json.load(open('timing.json'))
+    if (DATA / 'timing.json').exists():
+        return json.load(open(DATA / 'timing.json'))
     # estimate from word counts if audio isn't finished yet
     T = {}
     for sid, lines in SCRIPT:

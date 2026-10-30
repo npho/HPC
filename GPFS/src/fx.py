@@ -1,6 +1,7 @@
 """Drawing helpers: a hybrid of 3Blue1Brown (dark canvas, motion, semantic colour) and Tufte
 (data-ink discipline, direct labels, hairlines, serif type, marginal sidenotes, small multiples)."""
 import skia, math, numpy as np
+from paths import font_path
 
 W, H = 1920, 1080          # logical canvas; scaled x2 for 4K
 
@@ -31,15 +32,14 @@ def ease_io(x):
     x = clamp01(x); return 0.5 * (1 - math.cos(math.pi * x))
 def lerp(a, b, t): return a + (b - a) * t
 
-_FD = '/usr/share/fonts/'
-_FILES = {
-    'serif':  _FD + 'truetype/google-fonts/Lora-Variable.ttf',
-    'serif_i':_FD + 'truetype/google-fonts/Lora-Italic-Variable.ttf',
-    'title':  _FD + 'truetype/google-fonts/Lora-Variable.ttf',
-    'sans':   _FD + 'opentype/inter/Inter-Regular.otf',
-    'sans_m': _FD + 'opentype/inter/Inter-Medium.otf',
-    'sans_b': _FD + 'opentype/inter/Inter-SemiBold.otf',
-    'mono':   _FD + 'truetype/dejavu/DejaVuSansMono.ttf',
+_FILES = {                 # files in assets/fonts (scripts/fetch_assets.sh)
+    'serif':  'Lora-Variable.ttf',
+    'serif_i':'Lora-Italic-Variable.ttf',
+    'title':  'Lora-Variable.ttf',
+    'sans':   'Inter-Regular.otf',
+    'sans_m': 'Inter-Medium.otf',
+    'sans_b': 'Inter-SemiBold.otf',
+    'mono':   'DejaVuSansMono.ttf',
 }
 _TF = {}; _FONT = {}
 TS = 1.2
@@ -48,7 +48,7 @@ def font(kind, size):
     k = (kind, size)
     if k not in _FONT:
         if kind not in _TF:
-            _TF[kind] = skia.Typeface.MakeFromFile(_FILES[kind])
+            _TF[kind] = skia.Typeface.MakeFromFile(font_path(_FILES[kind]))
         f = skia.Font(_TF[kind], size)
         f.setSubpixel(True); f.setEdging(skia.Font.Edging.kSubpixelAntiAlias)
         _FONT[k] = f

@@ -1,5 +1,6 @@
 import math, random, json
 from fx import *
+from paths import DATA
 
 def vis(A, i, n_lines, d_in=0.9, d_out=0.9, delay=0.2):
     """visibility of beat i: fades in at its cue, fades out when the next beat starts"""
@@ -343,7 +344,7 @@ def s5(c, A):
 _SIM = None
 def _sim():
     global _SIM
-    if _SIM is None: _SIM = json.load(open('sim_summary.json'))
+    if _SIM is None: _SIM = json.load(open(DATA / 'sim_summary.json'))
     return _SIM
 
 def _prog_bar(c, x, y, w, label, p, col, a):

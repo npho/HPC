@@ -2,6 +2,7 @@ import sys
 from common import *
 import numpy as np
 from PIL import Image
+from paths import build_dir
 T = load_timing()
 sid = sys.argv[1]
 fr = float(sys.argv[2]) if len(sys.argv) > 2 else 0.93
@@ -19,4 +20,4 @@ cols = 3
 rows = (len(imgs) + cols - 1) // cols
 sheet = Image.new('RGB', (cols * W_, rows * H_), (0, 0, 0))
 for k, im in enumerate(imgs): sheet.paste(im, ((k % cols) * W_, (k // cols) * H_))
-sheet.save(f'frames/contact_{sid}.png'); print(sid, len(imgs), sheet.size)
+sheet.save(build_dir('stills') / f'contact_{sid}.png'); print(sid, len(imgs), sheet.size)
