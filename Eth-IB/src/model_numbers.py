@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Every number in the video that is *derived by me* (not quoted from a source) is computed here,
-so it is reproducible and can be audited.  Output: ../build/model_numbers.json
+so it is reproducible and can be audited.  Output: data/model_numbers.json
 
 Sections
   1. first-principles arithmetic (serialization, propagation, buffers, PCIe, headers)
@@ -11,7 +11,7 @@ Sections
 import json, math, os, random
 import numpy as np
 
-OUT = os.path.join(os.path.dirname(__file__), "..", "build")
+from paths import DATA as OUT
 os.makedirs(OUT, exist_ok=True)
 R = {}
 

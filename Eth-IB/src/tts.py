@@ -4,18 +4,17 @@ Synthesize the narration with Kokoro-82M (ONNX, Apache-2.0) and write per-beat W
 
   python3 tts.py [--voice af_heart] [--speed 1.0] [--only open,history]
 
-Outputs (in ../build/audio):
-  <scene>_<beat>.wav     one file per beat (24 kHz mono)
-  timings.json           per scene: beat start/end (seconds, relative to scene start), scene duration
+Outputs:
+  build/audio/<scene>_<beat>.wav   one file per beat (24 kHz mono)
+  data/timing.json                 per scene: beat start/end (seconds, relative to scene start), scene duration
 
-Model files are not part of the repo; set KOKORO_DIR to a folder containing kokoro-v1.0.onnx and voices-v1.0.bin
-(downloaded from https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.0).
+Model files come from scripts/fetch_assets.sh (assets/models, or set KOKORO_DIR).
 """
 import argparse, json, os, re, sys, time
 import numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
-sys.path.insert(0, os.path.dirname(__file__))
 from script import SCENES
+from paths import DATA, MODELS, build_dir
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--voice", default="af_heart")
@@ -23,18 +22,16 @@ ap.add_argument("--speed", type=float, default=1.0)
 ap.add_argument("--only", default="")
 a = ap.parse_args()
 
-KDIR = os.environ.get("KOKORO_DIR", "models")
-BUILD = os.path.join(os.path.dirname(__file__), "..", "build")
-AUD = os.path.join(BUILD, "audio"); os.makedirs(AUD, exist_ok=True)
+AUD = str(build_dir("audio"))
 SR = 24000
 LEAD_IN = 0.7          # silence at scene start (fade-in)
 GAP_SENT = 0.16        # between sentences inside a beat
 GAP_BEAT = 0.42        # after each beat
 TAIL = 0.9             # after last beat of a scene (fade-out)
 
-k = Kokoro(os.path.join(KDIR, "kokoro-v1.0.onnx"), os.path.join(KDIR, "voices-v1.0.bin"))
-tpath = os.path.join(AUD, "timings.json")
-timings = json.load(open(tpath)) if os.path.exists(tpath) else {}
+k = Kokoro(str(MODELS / "kokoro-v1.0.onnx"), str(MODELS / "voices-v1.0.bin"))
+tpath = DATA / "timing.json"
+timings = json.load(open(tpath)) if tpath.exists() else {}
 only = set(filter(None, a.only.split(",")))
 
 def split_sentences(t):

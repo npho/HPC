@@ -5,6 +5,7 @@ Narrated, first-principles explainer videos on HPC systems. Each folder holds ev
 | Folder | Topic |
 |---|---|
 | [BeeGFS](BeeGFS/) | BeeGFS parallel file system |
+| [Eth-IB](Eth-IB/) | InfiniBand vs Ethernet |
 | [GPFS](GPFS/) | GPFS / IBM Storage Scale |
 | [Lustre](Lustre/) | Lustre parallel file system |
 

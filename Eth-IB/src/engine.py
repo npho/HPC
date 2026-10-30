@@ -13,8 +13,7 @@ Design rules
 import math, os
 import skia
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-FONT_DIR = os.path.join(HERE, "..", "assets", "fonts")
+from paths import font_path
 LW, LH = 1920, 1080
 
 # ------------------------------------------------------------------ palette
@@ -54,15 +53,15 @@ def pulse(t, a, b):                  # 0 -> 1 -> 0 between a and b
 
 # ------------------------------------------------------------------ fonts
 _FONT_FILES = {
-    "serif":  os.path.join(FONT_DIR, "et-book-roman-line-figures.ttf"),
-    "serifb": os.path.join(FONT_DIR, "et-book-bold-line-figures.ttf"),
-    "serifi": os.path.join(FONT_DIR, "et-book-display-italic-old-style-figures.ttf"),
-    "sans":   "/usr/share/fonts/opentype/inter/Inter-Regular.otf",
-    "sansm":  "/usr/share/fonts/opentype/inter/Inter-Medium.otf",
-    "sansb":  "/usr/share/fonts/opentype/inter/Inter-SemiBold.otf",
-    "mono":   "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
-    "math":   "/usr/share/texmf/fonts/opentype/public/lm/lmroman10-regular.otf",
-    "mathi":  "/usr/share/texmf/fonts/opentype/public/lm/lmroman10-italic.otf",
+    "serif":  "et-book-roman-line-figures.ttf",
+    "serifb": "et-book-bold-line-figures.ttf",
+    "serifi": "et-book-display-italic-old-style-figures.ttf",
+    "sans":   "Inter-Regular.otf",
+    "sansm":  "Inter-Medium.otf",
+    "sansb":  "Inter-SemiBold.otf",
+    "mono":   "DejaVuSansMono.ttf",
+    "math":   "lmroman10-regular.otf",
+    "mathi":  "lmroman10-italic.otf",
 }
 _tf, _fc = {}, {}
 _DEBUG_GLYPHS = bool(os.environ.get("DEBUG_GLYPHS"))
@@ -72,7 +71,7 @@ def font(name="serif", size=28):
     f = _fc.get(key)
     if f is None:
         if name not in _tf:
-            _tf[name] = skia.Typeface.MakeFromFile(_FONT_FILES[name])
+            _tf[name] = skia.Typeface.MakeFromFile(font_path(_FONT_FILES[name]))
         f = skia.Font(_tf[name], size)
         f.setSubpixel(True)
         f.setEdging(skia.Font.Edging.kSubpixelAntiAlias)

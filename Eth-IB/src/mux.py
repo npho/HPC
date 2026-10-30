@@ -2,19 +2,17 @@
 """
 Assemble the final video: concat per-scene mp4s, build the narration track from the per-beat WAVs at the
 timings.json offsets, loudness-normalise, write SRT subtitles, mux (4K + a 1080p proxy).
-  python3 assemble.py
+  python3 mux.py
 """
 import json, os, re, subprocess, sys
 import numpy as np, soundfile as sf
-sys.path.insert(0, os.path.dirname(__file__))
 from script import SCENES, sub
 from scenes import ORDER
+from paths import BUILD, DATA, OUT
 
-ROOT = os.path.join(os.path.dirname(__file__), "..")
-BUILD = os.path.join(ROOT, "build"); OUT = os.path.join(ROOT, "out")
 os.makedirs(OUT, exist_ok=True)
 SR = 24000
-T = json.load(open(os.path.join(BUILD, "audio", "timings.json")))
+T = json.load(open(DATA / "timing.json"))
 REFS_DUR = 14.0
 
 def probe(p):
@@ -25,12 +23,12 @@ def srt_time(s):
     ms = int(round(s * 1000)); h, ms = divmod(ms, 3600000); m, ms = divmod(ms, 60000); sec, ms = divmod(ms, 1000)
     return f"{h:02d}:{m:02d}:{sec:02d},{ms:03d}"
 
-scenes = [s for s in ORDER if os.path.exists(os.path.join(BUILD, "scenes", f"{s}.mp4"))]
+scenes = [s for s in ORDER if os.path.exists(os.path.join(BUILD, "video", f"{s}.mp4"))]
 missing = [s for s in ORDER if s not in scenes]
 if missing: print("WARNING: missing scene videos:", missing)
 
 # real durations (video is the clock)
-vdur = {s: probe(os.path.join(BUILD, "scenes", f"{s}.mp4")) for s in scenes}
+vdur = {s: probe(os.path.join(BUILD, "video", f"{s}.mp4")) for s in scenes}
 offs, t0 = {}, 0.0
 for s in scenes:
     offs[s] = t0; t0 += vdur[s]
@@ -66,7 +64,7 @@ open(os.path.join(OUT, "ib_vs_ethernet.srt"), "w").write("\n".join(srt))
 
 # concat list
 lst = os.path.join(BUILD, "concat.txt")
-open(lst, "w").write("".join(f"file '{os.path.abspath(os.path.join(BUILD, 'scenes', s + '.mp4'))}'\n" for s in scenes))
+open(lst, "w").write("".join(f"file '{os.path.abspath(os.path.join(BUILD, 'video', s + '.mp4'))}'\n" for s in scenes))
 silent = os.path.join(BUILD, "video_silent.mp4")
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", silent], check=True)
 
