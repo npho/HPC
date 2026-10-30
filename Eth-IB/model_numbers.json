@@ -1,0 +1,177 @@
+{
+  "fiber_ns_per_m": 4.9,
+  "serialize_4KiB_ns": {
+    "1": 32768.0,
+    "10": 3276.8,
+    "100": 327.68,
+    "400": 81.92,
+    "800": 40.96
+  },
+  "fiber_m_during_4KiB_at_400G": 16.718367346938773,
+  "bdp_400G_bytes": {
+    "3": 1470.0,
+    "50": 24500.000000000004,
+    "100": 49000.00000000001,
+    "500": 245000.0,
+    "2000": 980000.0
+  },
+  "pcie_x16_Gbps_per_dir": {
+    "Gen4": 252.064,
+    "Gen5": 504.12,
+    "Gen6": 968.0
+  },
+  "header_efficiency_4KiB": {
+    "InfiniBand (LRH8+BTH12+ICRC4+VCRC2)": 0.9936923823386705,
+    "RoCEv2, Slingshot-paper count": 0.9850889850889851,
+    "RoCEv2, Hoefler et al. count": 0.984142239308025
+  },
+  "header_overhead_pct_4KiB": {
+    "InfiniBand (LRH8+BTH12+ICRC4+VCRC2)": 0.6307617661329452,
+    "RoCEv2, Slingshot-paper count": 1.491101491101491,
+    "RoCEv2, Hoefler et al. count": 1.5857760691975011
+  },
+  "fat_tree": {
+    "4": {
+      "two_level": {
+        "hosts": 8,
+        "switches": 6
+      },
+      "three_level": {
+        "hosts": 16,
+        "switches": 20
+      }
+    },
+    "8": {
+      "two_level": {
+        "hosts": 32,
+        "switches": 12
+      },
+      "three_level": {
+        "hosts": 128,
+        "switches": 80
+      }
+    },
+    "36": {
+      "two_level": {
+        "hosts": 648,
+        "switches": 54
+      },
+      "three_level": {
+        "hosts": 11664,
+        "switches": 1620
+      }
+    },
+    "48": {
+      "two_level": {
+        "hosts": 1152,
+        "switches": 72
+      },
+      "three_level": {
+        "hosts": 27648,
+        "switches": 2880
+      }
+    },
+    "64": {
+      "two_level": {
+        "hosts": 2048,
+        "switches": 96
+      },
+      "three_level": {
+        "hosts": 65536,
+        "switches": 5120
+      }
+    },
+    "128": {
+      "two_level": {
+        "hosts": 8192,
+        "switches": 192
+      },
+      "three_level": {
+        "hosts": 524288,
+        "switches": 20480
+      }
+    },
+    "144": {
+      "two_level": {
+        "hosts": 10368,
+        "switches": 216
+      },
+      "three_level": {
+        "hosts": 746496,
+        "switches": 25920
+      }
+    },
+    "512": {
+      "two_level": {
+        "hosts": 131072,
+        "switches": 768
+      },
+      "three_level": {
+        "hosts": 33554432,
+        "switches": 327680
+      }
+    }
+  },
+  "checks": {
+    "Q3400 144-port two-level -> NICs (datasheet says 10,368)": 10368,
+    "Al-Fares k=48 three-level hosts (paper says 27,648)": 27648,
+    "Al-Fares k=48 switches (paper says 2,880)": 2880,
+    "TH6 at 200G: 512 ports two-level hosts (Broadcom says >100,000)": 131072
+  },
+  "dragonfly": {
+    "Kim fig5 p=h=2,a=4": {
+      "groups": 9,
+      "terminals": 72,
+      "radix": 7
+    },
+    "Frontier-like a=32,p=16,h=16 (max)": {
+      "groups": 513,
+      "terminals": 262656,
+      "radix": 63
+    },
+    "Slingshot paper 1D example a=32,p=16,h=17": {
+      "groups": 545,
+      "terminals": 279040,
+      "radix": 64
+    }
+  },
+  "frontier_global_links_used_per_group": 292,
+  "frontier_global_ports_per_group": 512,
+  "frontier_nodes": 9472,
+  "frontier_injection_GBps_per_node": 100,
+  "ecmp_model_16x16": {
+    "random_permutation/ecmp": {
+      "mean": 0.5563543965690257,
+      "p5": 0.5270042599655511,
+      "p95": 0.5888943142361112,
+      "trials": 300
+    },
+    "random_permutation/dmodk": {
+      "mean": 0.6919617620823892,
+      "p5": 0.65625,
+      "p95": 0.7265625,
+      "trials": 300
+    },
+    "shift/ecmp": {
+      "mean": 0.6440494791666667,
+      "p5": 0.6130859375,
+      "p95": 0.6796875,
+      "trials": 300
+    },
+    "shift/dmodk": {
+      "mean": 1.0,
+      "p5": 1.0,
+      "p95": 1.0,
+      "trials": 3
+    },
+    "ideal_per_packet_spraying": {
+      "mean": 1.0,
+      "note": "each flow split evenly over all uplinks: every link carries exactly H/U = 1 flow-equivalent"
+    }
+  },
+  "ecmp_model_sensitivity_random_perm": {
+    "8x8 (64 hosts)": 0.6095476973880347,
+    "16x16 (256 hosts)": 0.5579294817814253,
+    "32x32 (1024 hosts)": 0.5254797725826886
+  }
+}

@@ -1,0 +1,3 @@
+/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf: DejaVu Sans Mono:style=Book
+/usr/share/fonts/truetype/google-fonts/Lora-Variable.ttf: Lora:style=Regular
+/usr/share/fonts/truetype/google-fonts/Lora-Variable.ttf: Lora
