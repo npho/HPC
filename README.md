@@ -4,6 +4,7 @@ Narrated, first-principles explainer videos on HPC systems. Each folder holds ev
 
 | Folder | Topic |
 |---|---|
+| [BeeGFS](BeeGFS/) | BeeGFS parallel file system |
 | [GPFS](GPFS/) | GPFS / IBM Storage Scale |
 | [Lustre](Lustre/) | Lustre parallel file system |
 
