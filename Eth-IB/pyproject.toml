@@ -1,0 +1,16 @@
+[project]
+name = "eth-ib-explainer"
+version = "1.0.0"
+description = "InfiniBand vs Ethernet first-principles explainer video."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "kokoro-onnx==0.6.1",
+    "numpy==2.5.3",
+    "onnxruntime==1.29.0",
+    "pillow==12.3.0",
+    "skia-python==144.1",
+    "soundfile==0.14.0",
+]
+
+[tool.uv]
+package = false

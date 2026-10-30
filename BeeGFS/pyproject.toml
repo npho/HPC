@@ -1,0 +1,20 @@
+[project]
+name = "beegfs-explainer"
+version = "1.0.0"
+description = "BeeGFS first-principles explainer video."
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "kokoro-onnx==0.6.1",
+    "numpy==2.5.3",
+    "onnxruntime==1.29.0",
+    "pillow==12.3.0",
+    "skia-python==144.1",
+    "soundfile==0.14.0",
+]
+
+[dependency-groups]
+# Optional pronunciation check (src/asr.py).
+asr = ["av==19.0.2", "faster-whisper==1.2.1"]
+
+[tool.uv]
+package = false

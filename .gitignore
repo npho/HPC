@@ -1,1 +1,10 @@
 .DS_Store
+__pycache__/
+.venv/
+
+# Downloaded fonts and TTS models (scripts/fetch_assets.sh).
+/assets/
+
+# Generated per project: intermediates and final videos.
+build/
+out/

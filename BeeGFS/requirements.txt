@@ -1,8 +1,0 @@
-av==19.0.2
-faster-whisper==1.2.1
-kokoro-onnx==0.6.1
-numpy==2.5.3
-onnxruntime==1.29.0
-scipy==1.18.1
-skia-python==144.1
-soundfile==0.14.0
