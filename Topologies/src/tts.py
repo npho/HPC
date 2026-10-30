@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Synthesize the narration with Kokoro-82M (ONNX), sentence by sentence, cached.
-Produces build/audio/<scene>.wav and build/timeline.json:
+Produces build/audio/<scene>.wav and data/timing.json:
   scenes[i] = {id, title, start, dur, lead, beats:[{start,end,sentences:[{start,end,text}]}]}
 All times in seconds; beat/sentence times are relative to the scene start; the
 scene start is absolute in the final video.
@@ -11,8 +11,7 @@ import soundfile as sf
 from kokoro_onnx import Kokoro
 from script import SCENES, spoken, display, split_sentences
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-BUILD = os.path.join(ROOT, "build")
+from paths import BUILD, DATA, MODELS
 CACHE = os.path.join(BUILD, "tts_cache")
 AUDIO = os.path.join(BUILD, "audio")
 VOICE, SPEED, LANG = "af_heart", 1.0, "en-us"
@@ -46,7 +45,7 @@ def synth(kokoro, text):
 
 def main():
     os.makedirs(CACHE, exist_ok=True); os.makedirs(AUDIO, exist_ok=True)
-    k = Kokoro(os.path.join(ROOT, "assets/tts/kokoro-v1.0.onnx"), os.path.join(ROOT, "assets/tts/voices-v1.0.bin"))
+    k = Kokoro(str(MODELS / "kokoro-v1.0.onnx"), str(MODELS / "voices-v1.0.bin"))
     sil = lambda s: np.zeros(int(s * SR), dtype=np.float32)
     t_abs = 0.0
     out = []
@@ -75,9 +74,9 @@ def main():
         out.append(dict(id=sc["id"], title=sc["title"], index=si, start=t_abs, dur=len(wav) / SR, beats=beats))
         t_abs += len(wav) / SR
         print(f"{sc['id']:12s} {len(wav)/SR:6.1f}s  (total {t_abs/60:5.2f} min, {time.time()-t0:5.0f}s elapsed)", flush=True)
-    tmp = os.path.join(BUILD, "timeline.json.tmp")
+    tmp = DATA / "timing.json.tmp"
     json.dump(dict(scenes=out, total=t_abs, voice=VOICE, speed=SPEED, sr=SR), open(tmp, "w"), indent=1)
-    os.replace(tmp, os.path.join(BUILD, "timeline.json"))
+    os.replace(tmp, DATA / "timing.json")
     print(f"total {t_abs/60:.2f} min")
 
 

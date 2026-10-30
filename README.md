@@ -9,6 +9,7 @@ Narrated, first-principles explainer videos on HPC systems. Each folder holds ev
 | [GPFS](GPFS/) | GPFS / IBM Storage Scale |
 | [Lustre](Lustre/) | Lustre parallel file system |
 | [Slurm](Slurm/) | Slurm workload manager |
+| [Topologies](Topologies/) | Interconnect topologies |
 
 ## Setup
 Requires [uv](https://docs.astral.sh/uv/) and ffmpeg with libx264 (macOS: `brew install uv ffmpeg`).

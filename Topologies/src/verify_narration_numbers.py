@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Cross-check every number the narration speaks against build/results.json (or closed forms).
+"""Cross-check every number the narration speaks against data/results.json (or closed forms).
 Each line: (what the narration says, value it must match, computed value, tolerance).
 Run:  python3 verify_narration_numbers.py   (exit code 1 on any mismatch)"""
-import json, math, os, sys
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-R = json.load(open(os.path.join(ROOT, "build", "results.json")))
+import json, math, sys
+from paths import DATA
+R = json.load(open(DATA / "results.json"))
 checks = []
 def chk(name, said, got, tol=0.0):
     checks.append((name, said, got, abs(said - got) <= tol + 1e-12))

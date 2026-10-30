@@ -60,7 +60,7 @@ Everything below is either (a) checked against a source I fetched, (b) computed 
 - Dragonfly paper: local-queue-only UGAL gave limited throughput and high latency on adversarial traffic. Slingshot estimates path load from information carried in acknowledgments, biased to minimal. Dragonfly+ (IETF draft): leaf-spine groups. Slim Fly: diameter 2, about 25% better cost-effectiveness, authors' model.
 
 ## Comparison (scene 11)
-- All six rows are built as graphs and measured; values on screen come from `build/results.json` (`compare`). Diameter is router-to-router hops.
+- All six rows are built as graphs and measured; values on screen come from `data/results.json` (`compare`). Diameter is router-to-router hops.
 
 ## Collectives and placement (scenes 12–13)
 - α–β model, ring all-reduce 2(p−1)α + 2(p−1)/p · n/B, Rabenseifner 2·lg p · α + the same bandwidth term: standard model (Thakur et al.) with my derivation. p = 1,024, α = 2 µs: ring startup 4.09 ms vs 40 µs. Recursive doubling vs Rabenseifner crossover about 128 KiB on the model's grid.

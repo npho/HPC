@@ -20,8 +20,7 @@ DW, DH = 1920, 1080
 W, H = 3840, 2160
 FPS = 30
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-FONT_DIR = os.path.join(ROOT, "assets", "fonts")
+from paths import font_path
 
 
 # ----------------------------------------------------------------------------
@@ -115,19 +114,19 @@ FONT_FILES = {
     "i": "et-book-display-italic-old-style-figures.ttf",
 }
 FALLBACK = {
-    "r": "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf",
-    "b": "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
-    "i": "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Italic.ttf",
-    "m": "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    "r": "DejaVuSerif.ttf",
+    "b": "DejaVuSerif-Bold.ttf",
+    "i": "DejaVuSerif-Italic.ttf",
+    "m": "DejaVuSansMono.ttf",
 }
 
 
 def typeface(style):
     if style not in _TF:
         if style == "m":
-            _TF[style] = skia.Typeface.MakeFromFile(FALLBACK["m"])
+            _TF[style] = skia.Typeface.MakeFromFile(font_path(FALLBACK["m"]))
         else:
-            tf = skia.Typeface.MakeFromFile(os.path.join(FONT_DIR, FONT_FILES[style]))
+            tf = skia.Typeface.MakeFromFile(font_path(FONT_FILES[style]))
             _TF[style] = tf
         assert _TF[style] is not None, style
     return _TF[style]
@@ -135,7 +134,7 @@ def typeface(style):
 
 @functools.lru_cache(maxsize=None)
 def fallback_face(style):
-    return skia.Typeface.MakeFromFile(FALLBACK[style if style in FALLBACK else "r"])
+    return skia.Typeface.MakeFromFile(font_path(FALLBACK[style if style in FALLBACK else "r"]))
 
 
 @functools.lru_cache(maxsize=512)

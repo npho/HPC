@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Render driver.
   python render.py still <scene_id> <t1> [t2 ...]     1080p PNG stills into build/stills/
-  python render.py scene <scene_id> [--res 4k|1080]   render one scene's silent video into build/video/
+  python render.py scene <scene_id> [N] [--res 4k|1080]  render one scene's silent video into build/video_<res>/
+                                                     (first N frames only -> <scene>_smoke.mp4)
   python render.py all   [--res 4k|1080] [--workers 2]
   python render.py mux   [--res 4k|1080]              concat videos + padded narration -> out/
 """
@@ -10,9 +11,7 @@ import numpy as np
 import soundfile as sf
 import engine as E
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-BUILD = os.path.join(ROOT, "build")
-OUT = os.path.join(ROOT, "out")
+from paths import BUILD, DATA, OUT
 
 
 def load_scenes():
@@ -27,7 +26,7 @@ def load_scenes():
 
 
 def timeline():
-    return json.load(open(os.path.join(BUILD, "timeline.json")))
+    return json.load(open(DATA / "timing.json"))
 
 
 def make_ctx(tl, i):
@@ -48,7 +47,7 @@ def render_scene(sid, res="4k", out_dir=None, limit=None):
     r = E.Renderer(size=size)
     out_dir = out_dir or os.path.join(BUILD, "video_" + res)
     os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, f"{idx:02d}_{sid}.mp4")
+    path = os.path.join(out_dir, f"{idx:02d}_{sid}{'_smoke' if limit else ''}.mp4")
     enc = E.open_encoder(path, size[0], size[1], crf=18 if res == "4k" else 20, threads=1)
     n = nframes(s) if limit is None else min(limit, nframes(s))
     t0 = time.time(); changed = 0

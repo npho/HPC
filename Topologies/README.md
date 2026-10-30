@@ -1,34 +1,25 @@
-# HPC interconnect topologies: video source
+# HPC interconnect topologies
 
-Generates a ~24.7 minute explainer (3840x2160, 30 fps) on interconnect topologies: fat trees / Clos, tori, hypercubes, HyperX, dragonfly, collectives and job placement, plus a brief tour of proprietary interconnects.
+Narrated explainer video: 3840x2160, 30 fps, ~25 min, 15 scenes. Fat trees / Clos, tori, hypercubes, HyperX, dragonfly, collectives and job placement, and a tour of proprietary interconnects. The video file is not stored here; this folder rebuilds it.
+
+## Build
+Run from this folder, after the one-time setup in the [root README](../README.md).
+```
+make tts      # narration -> build/audio/, data/timing.json
+make render   # 4K scenes -> build/video_4k/ (CPU only, slow; WORKERS=2, RES=1080 for a proxy)
+make video    # -> out/hpc_topologies_4k.mp4 + narration.srt
+```
+Quick checks: `make smoke`, `make stills SCENE=clos T="10 30"`, `make sim`, `make check`. `make help` lists all targets.
 
 ## Layout
-- `src/script.py` narration (15 scenes). `{Display|spoken}` gives on-screen text vs. the pronunciation fed to TTS.
-- `src/tts.py` Kokoro-82M narration -> `build/audio/*.wav`, `build/timeline.json`.
-- `src/topo_graphs.py`, `topo_flows.py`, `models.py`, `selftest.py` topology builders, flow/throughput models, self-tests; `models.py` writes `build/results.json` (included).
-- `src/engine.py`, `common.py`, `scenes_a/b/c.py` skia drawing engine and scenes (pure functions `draw(c, t, ctx)`).
-- `src/render.py` `still | scene | all | mux | dry` commands.
-- `src/verify_narration_numbers.py` checks every number spoken in the narration against `results.json` (59 checks).
-- `notes.md` verification ledger: sources, corrections, what is modeled vs. checked vs. unverified.
-
-## Reproduce
-```
-pip install --break-system-packages skia-python==144.1 kokoro-onnx==0.6.1 onnxruntime==1.29.0 phonemizer==3.4.0 numpy==2.5.3 pillow==12.3.0 soundfile==0.14.0
-# system: ffmpeg 6.1.1 (libx264), espeak-ng
-mkdir -p assets/fonts assets/tts
-# Kokoro model + voices
-curl -L -o assets/tts/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
-curl -L -o assets/tts/voices-v1.0.bin  https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
-# ET Book fonts (Edward Tufte, MIT): fetch the three TTFs used in src/engine.py from
-# https://github.com/edwardtufte/et-book (et-book/ directory) into assets/fonts
-cd src
-python3 models.py && python3 selftest.py     # model results
-python3 tts.py                               # narration + timeline
-python3 verify_narration_numbers.py
-python3 render.py all --res 4k --workers 2   # ~45 min on CPU
-python3 render.py mux --res 4k               # -> out/hpc_topologies_4k.mp4, narration.srt
-```
-Paths assume the project root is the parent of `src/`. Fonts missing a glyph fall back to DejaVu.
+- `src/script.py` narration (15 scenes); `{Display|spoken}` separates on-screen text from what TTS says.
+- `src/engine.py`, `common.py` skia drawing engine; `src/scenes_{a,b,c}.py` the scenes (pure functions `draw(c, t, ctx)`).
+- `src/tts.py`, `render.py` (`still | scene | all | mux | dry`) pipeline; `stills_all.py`, `stills_beats.py` contact sheets.
+- `src/topo_graphs.py`, `topo_flows.py`, `models.py`, `selftest.py` topology builders, flow models, self-tests -> `data/results.json`.
+- `src/verify_narration_numbers.py` checks every spoken number against `data/results.json` (59 checks).
+- `data/` model results and `timing.json` (beat and sentence times that drive the animation).
+- `notes/` verification ledger: sources, corrections, modeled vs. checked vs. unverified.
 
 ## Caveats
-Narration is synthetic speech (Kokoro). All throughput figures are my models, not hardware measurements; see `notes.md`.
+- Voice: Kokoro `af_heart`, speed 1.0. The original timing was not archived; `timing.json` was re-synthesized when this folder was restructured.
+- Throughput figures are models, not hardware measurements; see the notes.

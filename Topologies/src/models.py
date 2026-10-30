@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run every model experiment and write build/results.json.
+"""Run every model experiment and write data/results.json.
 All on-screen numbers in the video come from this file or from a cited source.
 Usage:  python3 models.py            (runs selftest first, then experiments)
 """
@@ -7,7 +7,8 @@ import json, math, os, random, statistics, subprocess, sys, time
 import topo_graphs as G
 import topo_flows as F
 
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "build", "results.json")
+from paths import DATA
+OUT = DATA / "results.json"
 
 
 def pct(xs, q):

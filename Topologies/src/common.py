@@ -2,8 +2,8 @@
 import math, json, os
 from engine import *
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-R = json.load(open(os.path.join(ROOT, "build", "results.json")))
+from paths import DATA
+R = json.load(open(DATA / "results.json"))
 
 
 def head(c, s, a=1.0, y=128):

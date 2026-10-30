@@ -1,0 +1,1894 @@
+{
+ "scenes": [
+  {
+   "id": "open",
+   "title": "Topology",
+   "index": 0,
+   "start": 0.0,
+   "dur": 45.388666666666666,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 15.902666666666669,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 4.441333333333334,
+       "text": "Picture a thousand machines that all have to agree on one number."
+      },
+      {
+       "start": 4.721333333333334,
+       "end": 8.774666666666668,
+       "text": "Every machine holds a piece, and to combine them, data has to move."
+      },
+      {
+       "start": 9.054666666666668,
+       "end": 15.902666666666669,
+       "text": "How fast it moves depends less on the machines than on the wires between them: how many there are, and the pattern they make."
+      }
+     ]
+    },
+    {
+     "start": 16.45266666666667,
+     "end": 27.506,
+     "sentences": [
+      {
+       "start": 16.45266666666667,
+       "end": 18.500666666666667,
+       "text": "That pattern is called a topology."
+      },
+      {
+       "start": 18.78066666666667,
+       "end": 27.506,
+       "text": "This video is about the handful that supercomputers actually use, why each one exists, and what each one quietly assumes about the traffic it will carry."
+      }
+     ]
+    },
+    {
+     "start": 28.056,
+     "end": 43.73866666666667,
+     "sentences": [
+      {
+       "start": 28.056,
+       "end": 40.664,
+       "text": "We'll spend most of our time on fat trees and their blocking factors, then tori, hypercubes, HyperX and dragonflies, and then on how collective algorithms and schedulers have to cooperate with them."
+      },
+      {
+       "start": 40.944,
+       "end": 43.73866666666667,
+       "text": "The proprietary names get a short tour at the end."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "history",
+   "title": "Where these ideas came from",
+   "index": 1,
+   "start": 45.388666666666666,
+   "dur": 73.52066666666667,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 15.646666666666665,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 2.6493333333333333,
+       "text": "Start in a telephone exchange."
+      },
+      {
+       "start": 2.929333333333333,
+       "end": 10.161333333333333,
+       "text": "In nineteen fifty-three, Charles Clos published a study of non-blocking switching networks in the Bell System Technical Journal."
+      },
+      {
+       "start": 10.441333333333333,
+       "end": 15.646666666666665,
+       "text": "His three-stage design is the ancestor of nearly every data center fabric today."
+      }
+     ]
+    },
+    {
+     "start": 16.196666666666665,
+     "end": 29.810000000000002,
+     "sentences": [
+      {
+       "start": 16.196666666666665,
+       "end": 25.284666666666666,
+       "text": "In the early nineteen eighties, Charles Seitz and his group at Caltech built the opposite kind of machine: many small computers wired directly to each other."
+      },
+      {
+       "start": 25.564666666666668,
+       "end": 29.810000000000002,
+       "text": "The Cosmic Cube had sixty-four processors, each linked to six neighbors."
+      }
+     ]
+    },
+    {
+     "start": 30.360000000000003,
+     "end": 47.85333333333334,
+     "sentences": [
+      {
+       "start": 30.360000000000003,
+       "end": 47.85333333333334,
+       "text": "Then, in quick succession: fat trees from Charles Leiserson in nineteen eighty-five, virtual channels for deadlock-free torus routing from Dally and Seitz in nineteen eighty-seven, and Dally's argument, in nineteen ninety, that under the wiring limits of the time, low-dimensional networks win."
+      }
+     ]
+    },
+    {
+     "start": 48.403333333333336,
+     "end": 62.19000000000001,
+     "sentences": [
+      {
+       "start": 48.403333333333336,
+       "end": 49.81133333333334,
+       "text": "Then the constraint flipped."
+      },
+      {
+       "start": 50.09133333333334,
+       "end": 55.936666666666675,
+       "text": "By two thousand eight, routers with dozens of ports were practical, but long cables were not cheap."
+      },
+      {
+       "start": 56.216666666666676,
+       "end": 62.19000000000001,
+       "text": "Kim, Dally, Scott and Abts proposed the dragonfly, and HyperX followed in two thousand nine."
+      }
+     ]
+    },
+    {
+     "start": 62.74000000000001,
+     "end": 71.87066666666668,
+     "sentences": [
+      {
+       "start": 62.74000000000001,
+       "end": 71.87066666666668,
+       "text": "Every topology you'll meet is an answer to one question, asked under different constraints: what is cheap, what is expensive, and what traffic do you expect?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "metrics",
+   "title": "Four measuring sticks",
+   "index": 2,
+   "start": 118.90933333333334,
+   "dur": 65.48133333333334,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 7.878666666666667,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 3.929333333333333,
+       "text": "To compare topologies we need a few measuring sticks."
+      },
+      {
+       "start": 4.209333333333333,
+       "end": 7.878666666666667,
+       "text": "Model the machine as a graph: endpoints, switches, and links."
+      }
+     ]
+    },
+    {
+     "start": 8.428666666666667,
+     "end": 14.084666666666665,
+     "sentences": [
+      {
+       "start": 8.428666666666667,
+       "end": 11.991333333333333,
+       "text": "Diameter: the largest number of hops any message ever needs."
+      },
+      {
+       "start": 12.271333333333333,
+       "end": 14.084666666666665,
+       "text": "It sets the floor on latency."
+      }
+     ]
+    },
+    {
+     "start": 14.634666666666666,
+     "end": 24.450666666666667,
+     "sentences": [
+      {
+       "start": 14.634666666666666,
+       "end": 16.810666666666666,
+       "text": "Radix: how many ports a switch has."
+      },
+      {
+       "start": 17.090666666666667,
+       "end": 24.450666666666667,
+       "text": "Silicon fixes it, and it's the constraint that shapes everything, because radix decides how many ways you can split your wires."
+      }
+     ]
+    },
+    {
+     "start": 25.000666666666667,
+     "end": 48.75533333333334,
+     "sentences": [
+      {
+       "start": 25.000666666666667,
+       "end": 26.302,
+       "text": "Bisection bandwidth."
+      },
+      {
+       "start": 26.582,
+       "end": 33.00333333333333,
+       "text": "Cut the machine into two equal halves, whichever way gives the smallest cut, and add up the bandwidth across it."
+      },
+      {
+       "start": 33.28333333333333,
+       "end": 38.702,
+       "text": "If everything in one half talks to the other, all of it crosses that cut, so the cut is a ceiling."
+      },
+      {
+       "start": 38.982,
+       "end": 44.059333333333335,
+       "text": "Divide by the bandwidth the endpoints can inject and you get a ratio I'll call beta."
+      },
+      {
+       "start": 44.339333333333336,
+       "end": 48.75533333333334,
+       "text": "A beta of one means a full-speed permutation can, in principle, fit."
+      }
+     ]
+    },
+    {
+     "start": 49.30533333333334,
+     "end": 58.16133333333334,
+     "sentences": [
+      {
+       "start": 49.30533333333334,
+       "end": 51.09733333333334,
+       "text": "But a ceiling is only a ceiling."
+      },
+      {
+       "start": 51.37733333333334,
+       "end": 58.16133333333334,
+       "text": "A network can have a wide bisection and a narrower cut somewhere else, and for your traffic, the narrowest cut counts."
+      }
+     ]
+    },
+    {
+     "start": 58.711333333333336,
+     "end": 63.83133333333333,
+     "sentences": [
+      {
+       "start": 58.711333333333336,
+       "end": 63.83133333333333,
+       "text": "The last stick is cost: ports, and cables, especially the long ones that need optics."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tree",
+   "title": "Fat trees",
+   "index": 3,
+   "start": 184.39066666666668,
+   "dur": 70.39533333333334,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 13.065333333333335,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 4.782666666666667,
+       "text": "Start with a tree: machines on the leaves, switches climbing to a root."
+      },
+      {
+       "start": 5.062666666666667,
+       "end": 11.228000000000002,
+       "text": "It's cheap, and it falls over the moment the left half talks to the right half, because everything squeezes through the root."
+      },
+      {
+       "start": 11.508000000000001,
+       "end": 13.065333333333335,
+       "text": "The cut is one link wide."
+      }
+     ]
+    },
+    {
+     "start": 13.615333333333336,
+     "end": 22.663333333333334,
+     "sentences": [
+      {
+       "start": 13.615333333333336,
+       "end": 20.271333333333335,
+       "text": "Leiserson's fix: make the links fatter as you climb, so capacity at each level matches the traffic below it."
+      },
+      {
+       "start": 20.551333333333336,
+       "end": 22.663333333333334,
+       "text": "Now bisection grows with the machine."
+      }
+     ]
+    },
+    {
+     "start": 23.213333333333335,
+     "end": 45.45066666666667,
+     "sentences": [
+      {
+       "start": 23.213333333333335,
+       "end": 24.962666666666667,
+       "text": "Nobody builds a fat link, though."
+      },
+      {
+       "start": 25.24266666666667,
+       "end": 29.573333333333334,
+       "text": "You build a folded Clos: many identical switches with k ports each."
+      },
+      {
+       "start": 29.853333333333335,
+       "end": 35.63466666666667,
+       "text": "Half the ports face down to machines, half face up, and every leaf has one link to every spine."
+      },
+      {
+       "start": 35.91466666666667,
+       "end": 45.45066666666667,
+       "text": "A spine can serve k leaves, each leaf has k over two machines, so a two-level tree holds k squared over two machines on three k over two switches."
+      }
+     ]
+    },
+    {
+     "start": 46.00066666666667,
+     "end": 59.699333333333335,
+     "sentences": [
+      {
+       "start": 46.00066666666667,
+       "end": 51.078,
+       "text": "With sixty-four-port switches: two thousand forty-eight machines, ninety-six switches."
+      },
+      {
+       "start": 51.358000000000004,
+       "end": 59.699333333333335,
+       "text": "Add a level and you get k cubed over four: sixty-five thousand five hundred thirty-six machines, five thousand one hundred twenty switches."
+      }
+     ]
+    },
+    {
+     "start": 60.24933333333333,
+     "end": 68.74533333333333,
+     "sentences": [
+      {
+       "start": 60.24933333333333,
+       "end": 64.452,
+       "text": "And any two machines are at most six links apart, however large the cluster."
+      },
+      {
+       "start": 64.732,
+       "end": 66.78,
+       "text": "Latency barely grows with scale."
+      },
+      {
+       "start": 67.06,
+       "end": 68.74533333333333,
+       "text": "That's the fat tree's great trick."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "oversub",
+   "title": "Blocking factors",
+   "index": 4,
+   "start": 254.786,
+   "dur": 94.02466666666666,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 13.769333333333334,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 2.7986666666666666,
+       "text": "Now the part people argue about."
+      },
+      {
+       "start": 3.078666666666667,
+       "end": 6.300000000000001,
+       "text": "Those numbers assume half of every switch's ports go up."
+      },
+      {
+       "start": 6.580000000000001,
+       "end": 13.769333333333334,
+       "text": "That's one-to-one, or non-blocking, and it's expensive: roughly one more cable per machine for every level of the tree."
+      }
+     ]
+    },
+    {
+     "start": 14.319333333333335,
+     "end": 31.780666666666665,
+     "sentences": [
+      {
+       "start": 14.319333333333335,
+       "end": 15.599333333333334,
+       "text": "So designers cheat."
+      },
+      {
+       "start": 15.879333333333333,
+       "end": 19.164666666666665,
+       "text": "Give each leaf forty-eight ports down and only sixteen up."
+      },
+      {
+       "start": 19.444666666666667,
+       "end": 24.820666666666668,
+       "text": "The leaf now has three times as much bandwidth facing its machines as facing the network."
+      },
+      {
+       "start": 25.10066666666667,
+       "end": 30.135333333333335,
+       "text": "Downlink over uplink bandwidth is the blocking factor, or oversubscription ratio."
+      },
+      {
+       "start": 30.415333333333336,
+       "end": 31.78066666666667,
+       "text": "This one is three-to-one."
+      }
+     ]
+    },
+    {
+     "start": 32.330666666666666,
+     "end": 52.218666666666664,
+     "sentences": [
+      {
+       "start": 32.330666666666666,
+       "end": 33.696,
+       "text": "The savings are real."
+      },
+      {
+       "start": 33.976,
+       "end": 43.81066666666666,
+       "text": "With sixty-four-port switches, three-to-one reaches three thousand seventy-two machines on eighty switches, where one-to-one reached two thousand forty-eight on ninety-six."
+      },
+      {
+       "start": 44.090666666666664,
+       "end": 52.218666666666664,
+       "text": "Switches per thousand machines fall from about forty-seven to about twenty-six, and uplink cables per machine fall from one to one third."
+      }
+     ]
+    },
+    {
+     "start": 52.76866666666666,
+     "end": 76.84333333333333,
+     "sentences": [
+      {
+       "start": 52.76866666666666,
+       "end": 54.581999999999994,
+       "text": "What you give up shows up at one leaf."
+      },
+      {
+       "start": 54.861999999999995,
+       "end": 59.93933333333333,
+       "text": "If all forty-eight machines send upward, they share sixteen uplinks, and each gets a third."
+      },
+      {
+       "start": 60.21933333333333,
+       "end": 63.461999999999996,
+       "text": "How much that hurts depends on how much traffic leaves the leaf."
+      },
+      {
+       "start": 63.742,
+       "end": 67.07,
+       "text": "A job that fits under one leaf never touches an uplink."
+      },
+      {
+       "start": 67.35,
+       "end": 76.84333333333333,
+       "text": "A job spread across the cluster and talking to everyone gets about one over the blocking factor: in my model, thirty-four percent of line rate for this cluster."
+      }
+     ]
+    },
+    {
+     "start": 77.39333333333333,
+     "end": 92.37466666666667,
+     "sentences": [
+      {
+       "start": 77.39333333333333,
+       "end": 83.36666666666666,
+       "text": "And the factors multiply: three-to-one at the leaf and three-to-one above it is nine-to-one across the top."
+      },
+      {
+       "start": 83.64666666666666,
+       "end": 87.48666666666666,
+       "text": "So the question to ask about any cluster isn't whether it's a fat tree."
+      },
+      {
+       "start": 87.76666666666667,
+       "end": 92.37466666666667,
+       "text": "It's the blocking factor at each level, and whether the scheduler packs jobs beneath it."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "clos",
+   "title": "What non-blocking really means",
+   "index": 5,
+   "start": 348.81066666666663,
+   "dur": 85.34466666666667,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 15.713333333333335,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 5.166666666666667,
+       "text": "There's a subtlety in the word non-blocking that took me a while to appreciate."
+      },
+      {
+       "start": 5.446666666666667,
+       "end": 7.4733333333333345,
+       "text": "Clos proved it in nineteen fifty-three."
+      },
+      {
+       "start": 7.753333333333335,
+       "end": 14.644000000000002,
+       "text": "Take a three-stage network, and build it with exactly n middle switches, where n is the number of inputs per switch."
+      },
+      {
+       "start": 14.924000000000001,
+       "end": 15.713333333333335,
+       "text": "One-to-one."
+      }
+     ]
+    },
+    {
+     "start": 16.263333333333335,
+     "end": 30.442000000000007,
+     "sentences": [
+      {
+       "start": 16.263333333333335,
+       "end": 17.031333333333336,
+       "text": "Watch."
+      },
+      {
+       "start": 17.311333333333337,
+       "end": 18.399333333333338,
+       "text": "Two calls are up."
+      },
+      {
+       "start": 18.67933333333334,
+       "end": 19.78866666666667,
+       "text": "A third arrives."
+      },
+      {
+       "start": 20.068666666666672,
+       "end": 25.82866666666667,
+       "text": "Its input switch already uses the first middle switch; its output switch already uses the second."
+      },
+      {
+       "start": 26.10866666666667,
+       "end": 28.83933333333334,
+       "text": "Every route is taken, though both ends are idle."
+      },
+      {
+       "start": 29.11933333333334,
+       "end": 30.442000000000007,
+       "text": "The network has blocked."
+      }
+     ]
+    },
+    {
+     "start": 32.19200000000001,
+     "end": 48.816,
+     "sentences": [
+      {
+       "start": 32.19200000000001,
+       "end": 35.62666666666667,
+       "text": "Clos's guarantee: use two n minus one middle switches."
+      },
+      {
+       "start": 35.90666666666667,
+       "end": 44.632000000000005,
+       "text": "The new call's input switch blocks at most n minus one middle switches, its output switch at most n minus one more, so one is always free."
+      },
+      {
+       "start": 44.912000000000006,
+       "end": 48.816,
+       "text": "That's strictly non-blocking, and it costs nearly twice the middle switches."
+      }
+     ]
+    },
+    {
+     "start": 49.366,
+     "end": 70.414,
+     "sentences": [
+      {
+       "start": 49.366,
+       "end": 56.47,
+       "text": "A cheaper promise: with just n middle switches, any set of calls can be routed, if you may move calls already in progress."
+      },
+      {
+       "start": 56.75,
+       "end": 58.648666666666664,
+       "text": "That's rearrangeably non-blocking."
+      },
+      {
+       "start": 58.928666666666665,
+       "end": 61.78733333333333,
+       "text": "I checked both by brute force on the smallest case."
+      },
+      {
+       "start": 62.06733333333333,
+       "end": 66.16333333333333,
+       "text": "With two middle switches, a hundred twenty-eight blocking states are reachable."
+      },
+      {
+       "start": 66.44333333333333,
+       "end": 67.42466666666667,
+       "text": "With three, none."
+      },
+      {
+       "start": 67.70466666666667,
+       "end": 70.414,
+       "text": "And with two, a rearrangement always exists."
+      }
+     ]
+    },
+    {
+     "start": 71.764,
+     "end": 83.69466666666668,
+     "sentences": [
+      {
+       "start": 71.764,
+       "end": 75.11333333333333,
+       "text": "Every one-to-one fat tree is the rearrangeable kind."
+      },
+      {
+       "start": 75.39333333333333,
+       "end": 79.34,
+       "text": "In a data center the calls are flows, and the rearranging is routing."
+      },
+      {
+       "start": 79.62,
+       "end": 83.69466666666668,
+       "text": "Whether the wires you paid for get used depends on how flows are routed."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "routing",
+   "title": "Hashing versus planning",
+   "index": 6,
+   "start": 434.1553333333333,
+   "dur": 68.35133333333333,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 25.956,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 3.844,
+       "text": "Real switches mostly don't rearrange; they hash."
+      },
+      {
+       "start": 4.124,
+       "end": 8.070666666666666,
+       "text": "Each flow picks a spine from its headers, blind to every other flow."
+      },
+      {
+       "start": 8.350666666666665,
+       "end": 13.854666666666665,
+       "text": "Take a one-to-one fat tree, sixteen leaves of sixteen machines, and a random permutation."
+      },
+      {
+       "start": 14.134666666666664,
+       "end": 21.686666666666664,
+       "text": "In my simulation, hashing gives the average flow about fifty-five percent of line rate, and the unluckiest flow about a fifth."
+      },
+      {
+       "start": 21.966666666666665,
+       "end": 25.956,
+       "text": "Static routing by destination does better, around seventy percent."
+      }
+     ]
+    },
+    {
+     "start": 27.306,
+     "end": 49.140666666666675,
+     "sentences": [
+      {
+       "start": 27.306,
+       "end": 29.482,
+       "text": "Now color the same traffic on purpose."
+      },
+      {
+       "start": 29.762,
+       "end": 37.826,
+       "text": "K\u00f6nig's theorem: a bipartite graph whose busiest node has n edges can be colored with n colors, so no node sees a color twice."
+      },
+      {
+       "start": 38.106,
+       "end": 41.647333333333336,
+       "text": "Let leaves be nodes, flows be edges, spines be colors."
+      },
+      {
+       "start": 41.92733333333334,
+       "end": 44.61533333333334,
+       "text": "A proper coloring is a conflict-free schedule."
+      },
+      {
+       "start": 44.89533333333334,
+       "end": 49.140666666666675,
+       "text": "Across two hundred random permutations, every flow got full line rate."
+      }
+     ]
+    },
+    {
+     "start": 49.69066666666667,
+     "end": 66.70133333333334,
+     "sentences": [
+      {
+       "start": 49.69066666666667,
+       "end": 53.46666666666667,
+       "text": "So a one-to-one fat tree has enough wire for any permutation."
+      },
+      {
+       "start": 53.74666666666667,
+       "end": 62.472,
+       "text": "Whether it delivers depends on routing: hashing, adaptive routing in the switches, or a central planner like the InfiniBand subnet manager."
+      },
+      {
+       "start": 62.752,
+       "end": 64.69333333333334,
+       "text": "The topology says what's possible."
+      },
+      {
+       "start": 64.97333333333334,
+       "end": 66.70133333333334,
+       "text": "The routing decides what you get."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "torus",
+   "title": "Meshes and tori",
+   "index": 7,
+   "start": 502.50666666666666,
+   "dur": 197.336,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 25.977333333333334,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 2.372,
+       "text": "Now flip the whole idea."
+      },
+      {
+       "start": 2.652,
+       "end": 6.684,
+       "text": "Put a small router in every node and wire each node to its neighbors."
+      },
+      {
+       "start": 6.964,
+       "end": 13.961333333333334,
+       "text": "These are direct networks, and the simplest family is the k-ary n-cube: n dimensions, k nodes along each."
+      },
+      {
+       "start": 14.241333333333333,
+       "end": 18.081333333333333,
+       "text": "A line is a one-dimensional mesh; join the ends and it's a ring."
+      },
+      {
+       "start": 18.361333333333334,
+       "end": 25.977333333333334,
+       "text": "Wrap the rows and columns of a grid and you have a torus, and add a third dimension for the shape behind a lot of famous machines."
+      }
+     ]
+    },
+    {
+     "start": 26.527333333333335,
+     "end": 35.91666666666667,
+     "sentences": [
+      {
+       "start": 26.527333333333335,
+       "end": 30.51666666666667,
+       "text": "The appeal: every node has just two n links, however big the machine."
+      },
+      {
+       "start": 30.79666666666667,
+       "end": 35.91666666666667,
+       "text": "No giant switches, no growing radix, and almost every cable runs between neighbors."
+      }
+     ]
+    },
+    {
+     "start": 36.46666666666667,
+     "end": 66.048,
+     "sentences": [
+      {
+       "start": 36.46666666666667,
+       "end": 38.49333333333333,
+       "text": "The price shows up in the measuring sticks."
+      },
+      {
+       "start": 38.77333333333333,
+       "end": 43.552,
+       "text": "Diameter is n times k over two, so the worst-case path grows with the machine."
+      },
+      {
+       "start": 43.832,
+       "end": 53.816,
+       "text": "Cut across one dimension, and wraparound means two planes of links are cut: two times k to the n minus one, which as a fraction of injection is four over k."
+      },
+      {
+       "start": 54.096000000000004,
+       "end": 56.29333333333334,
+       "text": "Every time k doubles, beta halves."
+      },
+      {
+       "start": 56.57333333333334,
+       "end": 60.81866666666667,
+       "text": "An eight by eight by eight torus has beta one half and diameter twelve."
+      },
+      {
+       "start": 61.098666666666674,
+       "end": 66.048,
+       "text": "Sixteen cubed, four thousand ninety-six nodes, has one quarter and twenty-four."
+      }
+     ]
+    },
+    {
+     "start": 66.598,
+     "end": 83.39533333333334,
+     "sentences": [
+      {
+       "start": 66.598,
+       "end": 69.69133333333333,
+       "text": "Here's all-to-all traffic with dimension-order routing."
+      },
+      {
+       "start": 69.97133333333333,
+       "end": 74.57933333333334,
+       "text": "On a torus, symmetry spreads the load perfectly: every link carries the same."
+      },
+      {
+       "start": 74.85933333333334,
+       "end": 79.42466666666667,
+       "text": "On a mesh, the central links carry a third more than average and saturate first."
+      },
+      {
+       "start": 79.70466666666667,
+       "end": 83.39533333333334,
+       "text": "In my model, the torus sustains about twice the injection rate."
+      }
+     ]
+    },
+    {
+     "start": 83.94533333333334,
+     "end": 107.80933333333334,
+     "sentences": [
+      {
+       "start": 83.94533333333334,
+       "end": 86.01466666666667,
+       "text": "Wraparound has a catch: deadlock."
+      },
+      {
+       "start": 86.29466666666667,
+       "end": 89.62266666666667,
+       "text": "Four packets, each waiting for the channel the next one holds."
+      },
+      {
+       "start": 89.90266666666668,
+       "end": 90.94800000000001,
+       "text": "Nobody moves."
+      },
+      {
+       "start": 91.22800000000001,
+       "end": 98.84400000000001,
+       "text": "Dally and Seitz's cure: two virtual channels per physical channel, and a packet switches to the second when it crosses a dateline."
+      },
+      {
+       "start": 99.12400000000001,
+       "end": 100.29733333333334,
+       "text": "The cycle breaks."
+      },
+      {
+       "start": 100.57733333333334,
+       "end": 107.80933333333334,
+       "text": "I built the channel dependency graph for small tori to check: a cycle without virtual channels, none with the dateline."
+      }
+     ]
+    },
+    {
+     "start": 109.35933333333334,
+     "end": 145.554,
+     "sentences": [
+      {
+       "start": 109.35933333333334,
+       "end": 110.49000000000001,
+       "text": "Why build tori?"
+      },
+      {
+       "start": 110.77000000000001,
+       "end": 116.48733333333334,
+       "text": "Because a lot of science talks mostly to its neighbors, and a torus hands it short, dedicated links."
+      },
+      {
+       "start": 116.76733333333334,
+       "end": 124.426,
+       "text": "Blue Gene L was a sixty-four by thirty-two by thirty-two torus, sixty-five thousand five hundred thirty-six nodes."
+      },
+      {
+       "start": 124.706,
+       "end": 131.91666666666666,
+       "text": "Cut it across the long dimension and you cross two thousand forty-eight links at one point four gigabits per second per direction."
+      },
+      {
+       "start": 132.19666666666666,
+       "end": 139.55666666666667,
+       "text": "By my arithmetic, three hundred fifty-eight gigabytes a second, close to the three hundred sixty in IBM's paper."
+      },
+      {
+       "start": 139.83666666666667,
+       "end": 145.554,
+       "text": "Notice it also carried a separate tree network for reductions: a torus is built for neighbors."
+      }
+     ]
+    },
+    {
+     "start": 146.104,
+     "end": 165.352,
+     "sentences": [
+      {
+       "start": 146.104,
+       "end": 148.536,
+       "text": "Fujitsu's Tofu went to six dimensions."
+      },
+      {
+       "start": 148.816,
+       "end": 157.11466666666666,
+       "text": "The K computer was twenty-four by eighteen by sixteen groups of two by three by two: eighty-two thousand nine hundred forty-four nodes."
+      },
+      {
+       "start": 157.39466666666667,
+       "end": 165.352,
+       "text": "Users ask for a three-dimensional shape, and the system guarantees that neighbors in their virtual torus are neighbors in the real network."
+      }
+     ]
+    },
+    {
+     "start": 165.90200000000002,
+     "end": 195.686,
+     "sentences": [
+      {
+       "start": 165.90200000000002,
+       "end": 181.49666666666667,
+       "text": "Google's TPU version four pods: four thousand ninety-six chips as sixty-four cubes of four by four by four, joined through optical circuit switches that reconfigure in milliseconds, so a slice can be assembled from whichever cubes are healthy."
+      },
+      {
+       "start": 181.77666666666667,
+       "end": 195.686,
+       "text": "Google's paper says all-reduce maps well onto tori while all-to-all strains the bisection, and that a twisted torus improved all-to-all throughput by one point six three and one point three one times on two slice shapes."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hyper",
+   "title": "Hypercubes and HyperX",
+   "index": 8,
+   "start": 699.8426666666667,
+   "dur": 102.206,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 24.865333333333332,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 4.462666666666667,
+       "text": "Squeeze the torus's k down to two and you get the hypercube."
+      },
+      {
+       "start": 4.7426666666666675,
+       "end": 10.630666666666666,
+       "text": "Two nodes make a link, two links a square, two squares a cube, two cubes a four-dimensional hypercube."
+      },
+      {
+       "start": 10.910666666666666,
+       "end": 13.705333333333332,
+       "text": "Each doubling adds a dimension, and a link per node."
+      },
+      {
+       "start": 13.985333333333331,
+       "end": 24.865333333333332,
+       "text": "Seitz built the Cosmic Cube this way and wrote that simulation showed good message flow for irregular computations, and that a hypercube contains all the lower-dimensional meshes."
+      }
+     ]
+    },
+    {
+     "start": 26.215333333333334,
+     "end": 42.82333333333334,
+     "sentences": [
+      {
+       "start": 26.215333333333334,
+       "end": 27.666,
+       "text": "The sticks look wonderful."
+      },
+      {
+       "start": 27.946,
+       "end": 32.66066666666667,
+       "text": "With N nodes: diameter log two N, bisection N over two, beta of one."
+      },
+      {
+       "start": 32.94066666666667,
+       "end": 34.242000000000004,
+       "text": "The catch is radix."
+      },
+      {
+       "start": 34.522000000000006,
+       "end": 41.007333333333335,
+       "text": "Every node needs log two N links: for eight thousand nodes, thirteen links, and six and a half cables per node."
+      },
+      {
+       "start": 41.287333333333336,
+       "end": 42.82333333333334,
+       "text": "The wiring is what hurts."
+      }
+     ]
+    },
+    {
+     "start": 43.373333333333335,
+     "end": 60.728,
+     "sentences": [
+      {
+       "start": 43.373333333333335,
+       "end": 45.05866666666667,
+       "text": "HyperX generalizes it."
+      },
+      {
+       "start": 45.33866666666667,
+       "end": 52.528,
+       "text": "Put switches on a grid and, along every row and column, connect each switch to every other: a full mesh instead of a ring."
+      },
+      {
+       "start": 52.808,
+       "end": 55.00533333333333,
+       "text": "Two switches per row is a hypercube."
+      },
+      {
+       "start": 55.285333333333334,
+       "end": 57.845333333333336,
+       "text": "One dimension is a fully connected graph."
+      },
+      {
+       "start": 58.12533333333334,
+       "end": 60.728,
+       "text": "The diameter is just the number of dimensions."
+      }
+     ]
+    },
+    {
+     "start": 61.278,
+     "end": 78.75533333333333,
+     "sentences": [
+      {
+       "start": 61.278,
+       "end": 63.85933333333333,
+       "text": "And you choose how many machines hang off each switch."
+      },
+      {
+       "start": 64.13933333333333,
+       "end": 73.654,
+       "text": "On a sixteen by sixteen grid of two hundred fifty-six switches, eight machines per switch gives beta of one, sixteen gives one half, thirty-two a quarter."
+      },
+      {
+       "start": 73.934,
+       "end": 78.75533333333333,
+       "text": "Fewer machines per switch buys bisection, at the price of more switches per machine."
+      }
+     ]
+    },
+    {
+     "start": 79.30533333333332,
+     "end": 100.556,
+     "sentences": [
+      {
+       "start": 79.30533333333332,
+       "end": 89.35333333333332,
+       "text": "The authors are careful: a folded Clos is generally more efficient when you need full bisection; HyperX shines with high-radix switches when you can live with less."
+      },
+      {
+       "start": 89.63333333333333,
+       "end": 100.556,
+       "text": "And a research machine built with both a fat tree and a twelve by eight HyperX reported that, with pattern-aware routing, the HyperX can challenge or even outperform the fat tree."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dragonfly",
+   "title": "Dragonflies",
+   "index": 9,
+   "start": 802.0486666666667,
+   "dur": 151.58666666666667,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 12.084,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 3.6093333333333333,
+       "text": "By two thousand eight the problem had flipped again."
+      },
+      {
+       "start": 3.889333333333333,
+       "end": 6.278666666666666,
+       "text": "Routers with dozens of ports were practical."
+      },
+      {
+       "start": 6.558666666666666,
+       "end": 12.084,
+       "text": "Cables were the expense: the long ones, between cabinets, are optical and dominate the cost."
+      }
+     ]
+    },
+    {
+     "start": 12.634,
+     "end": 25.927333333333337,
+     "sentences": [
+      {
+       "start": 12.634,
+       "end": 21.274,
+       "text": "The dragonfly's idea: wire all the routers in a group to each other with short cables, and treat the whole group as one giant virtual router."
+      },
+      {
+       "start": 21.554000000000002,
+       "end": 25.927333333333337,
+       "text": "Then connect groups to each other, all to all, with one long cable per pair."
+      }
+     ]
+    },
+    {
+     "start": 26.477333333333338,
+     "end": 45.96000000000001,
+     "sentences": [
+      {
+       "start": 26.477333333333338,
+       "end": 32.45066666666667,
+       "text": "Three numbers describe it: a routers per group, p machines per router, h global links per router."
+      },
+      {
+       "start": 32.73066666666667,
+       "end": 39.57866666666667,
+       "text": "A group can reach a times h other groups, so the machine has a times p times, a times h plus one, machines."
+      },
+      {
+       "start": 39.85866666666667,
+       "end": 45.96000000000001,
+       "text": "Load balances across machine, local and global channels when a equals two p equals two h."
+      }
+     ]
+    },
+    {
+     "start": 46.510000000000005,
+     "end": 70.32066666666668,
+     "sentences": [
+      {
+       "start": 46.510000000000005,
+       "end": 53.33666666666667,
+       "text": "Take a of four, p and h of two: nine groups, seventy-two machines, any two at most three router hops apart."
+      },
+      {
+       "start": 53.616666666666674,
+       "end": 70.32066666666668,
+       "text": "Slingshot is the same formula scaled up: a sixty-four-port switch, sixteen machines, thirty-one local links, seventeen global, for five hundred forty-five groups and two hundred seventy-nine thousand forty machines, the largest configuration in HPE's paper."
+      }
+     ]
+    },
+    {
+     "start": 70.87066666666668,
+     "end": 83.052,
+     "sentences": [
+      {
+       "start": 70.87066666666668,
+       "end": 83.052,
+       "text": "Kim and colleagues estimated that, from sixteen thousand nodes up, this cut cost by about twenty percent against a flattened butterfly and fifty-two against a folded Clos, in their two thousand eight cost model."
+      }
+     ]
+    },
+    {
+     "start": 83.602,
+     "end": 97.09,
+     "sentences": [
+      {
+       "start": 83.602,
+       "end": 86.84466666666667,
+       "text": "Now the weak spot: the single cable between two groups."
+      },
+      {
+       "start": 87.12466666666667,
+       "end": 91.39133333333334,
+       "text": "If every machine in one group sends to the next, all of it needs that one link."
+      },
+      {
+       "start": 91.67133333333334,
+       "end": 97.09,
+       "text": "With minimal routing, throughput falls to one over a times p: one eighth in my example."
+      }
+     ]
+    },
+    {
+     "start": 97.64,
+     "end": 115.672,
+     "sentences": [
+      {
+       "start": 97.64,
+       "end": 102.73866666666666,
+       "text": "The cure is randomized routing: send each packet via a random intermediate group."
+      },
+      {
+       "start": 103.01866666666666,
+       "end": 106.90133333333333,
+       "text": "Load spreads over every global link, at the price of a longer path."
+      },
+      {
+       "start": 107.18133333333333,
+       "end": 115.672,
+       "text": "In my model the adversarial pattern improves from thirteen percent to forty-four, but uniform traffic falls from full rate to fifty-five."
+      }
+     ]
+    },
+    {
+     "start": 116.222,
+     "end": 149.93666666666667,
+     "sentences": [
+      {
+       "start": 116.222,
+       "end": 122.42999999999999,
+       "text": "So real dragonflies are adaptive, choosing between minimal and non-minimal paths using queue depths."
+      },
+      {
+       "start": 122.71,
+       "end": 131.49933333333334,
+       "text": "The details matter: the dragonfly paper found that local queues alone gave limited throughput and high latency on adversarial traffic."
+      },
+      {
+       "start": 131.77933333333334,
+       "end": 136.02466666666666,
+       "text": "Slingshot estimates load from acknowledgments carried back with each packet."
+      },
+      {
+       "start": 136.30466666666666,
+       "end": 149.93666666666667,
+       "text": "Variants chase the same goal: dragonfly-plus replaces the all-to-all group with a leaf-spine network, and Slim Fly pushes diameter down to two, with about twenty-five percent better cost-effectiveness in its authors' model."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "compare",
+   "title": "Side by side",
+   "index": 10,
+   "start": 953.6353333333334,
+   "dur": 46.50933333333333,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 8.964,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 8.964,
+       "text": "Side by side, then: concrete designs near eight to sixteen thousand endpoints, every number from building the graph and measuring it."
+      }
+     ]
+    },
+    {
+     "start": 10.514000000000001,
+     "end": 24.85266666666667,
+     "sentences": [
+      {
+       "start": 10.514000000000001,
+       "end": 18.108666666666668,
+       "text": "The torus has no switches, but pays in cables and distance: three links per node, diameter thirty-two, beta of an eighth."
+      },
+      {
+       "start": 18.38866666666667,
+       "end": 24.85266666666667,
+       "text": "The hypercube has full bisection and low diameter, but radix fourteen and six and a half cables per node."
+      }
+     ]
+    },
+    {
+     "start": 25.402666666666672,
+     "end": 39.314666666666675,
+     "sentences": [
+      {
+       "start": 25.402666666666672,
+       "end": 34.59733333333334,
+       "text": "HyperX and dragonfly sit between: diameter two or three, under one and a half cables per endpoint, but switches with thirty to sixty ports."
+      },
+      {
+       "start": 34.87733333333334,
+       "end": 39.314666666666675,
+       "text": "The one-to-one fat tree pays two cables per endpoint for full bisection."
+      }
+     ]
+    },
+    {
+     "start": 39.86466666666667,
+     "end": 44.85933333333334,
+     "sentences": [
+      {
+       "start": 39.86466666666667,
+       "end": 41.614000000000004,
+       "text": "Nobody wins every column."
+      },
+      {
+       "start": 41.894000000000005,
+       "end": 44.85933333333334,
+       "text": "Each topology is a bet on the traffic it will carry."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "collectives",
+   "title": "Collectives meet topology",
+   "index": 11,
+   "start": 1000.1446666666667,
+   "dur": 160.304,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 12.809333333333335,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 2.1373333333333333,
+       "text": "So far, wires."
+      },
+      {
+       "start": 2.4173333333333336,
+       "end": 4.422666666666666,
+       "text": "But the traffic on them isn't random."
+      },
+      {
+       "start": 4.7026666666666666,
+       "end": 12.809333333333335,
+       "text": "In HPC and AI it's collective operations like all-reduce, and the shape of the algorithm decides which wires get used."
+      }
+     ]
+    },
+    {
+     "start": 13.359333333333336,
+     "end": 48.015333333333345,
+     "sentences": [
+      {
+       "start": 13.359333333333336,
+       "end": 20.03666666666667,
+       "text": "The simplest cost model: sending n bytes costs alpha plus n over B, a startup plus time per byte."
+      },
+      {
+       "start": 20.31666666666667,
+       "end": 22.23666666666667,
+       "text": "It ignores topology on purpose."
+      },
+      {
+       "start": 22.516666666666673,
+       "end": 27.48733333333334,
+       "text": "In all-reduce, every one of p processes ends with the sum of everyone's vectors."
+      },
+      {
+       "start": 27.76733333333334,
+       "end": 34.31666666666668,
+       "text": "The ring algorithm cuts the vector into p chunks and passes them around, in two times p minus one steps."
+      },
+      {
+       "start": 34.59666666666668,
+       "end": 48.015333333333345,
+       "text": "Its bandwidth term, two times p minus one over p, times n over B, is the minimum possible; Patarasuk and Yuan proved the ring bandwidth-optimal on any tree-connected network, with one port per node."
+      }
+     ]
+    },
+    {
+     "start": 48.56533333333334,
+     "end": 64.42133333333335,
+     "sentences": [
+      {
+       "start": 48.56533333333334,
+       "end": 52.149333333333345,
+       "text": "The price is latency: two times p minus one alphas."
+      },
+      {
+       "start": 52.429333333333346,
+       "end": 58.061333333333344,
+       "text": "With a thousand processes and two microseconds per message, that's four milliseconds of startup."
+      },
+      {
+       "start": 58.341333333333345,
+       "end": 64.42133333333335,
+       "text": "Recursive halving and doubling moves the same data in two log two p steps: forty microseconds."
+      }
+     ]
+    },
+    {
+     "start": 64.97133333333335,
+     "end": 83.17133333333335,
+     "sentences": [
+      {
+       "start": 64.97133333333335,
+       "end": 67.93666666666668,
+       "text": "That gap is why trees came to GPU collectives."
+      },
+      {
+       "start": 68.21666666666668,
+       "end": 83.17133333333335,
+       "text": "NVIDIA's NCCL team wrote that ring latency grows linearly with the number of GPUs, and reported up to a hundred eighty times lower latency with a double binary tree at twenty-four thousand GPUs on Summit."
+      }
+     ]
+    },
+    {
+     "start": 83.72133333333335,
+     "end": 95.07333333333335,
+     "sentences": [
+      {
+       "start": 83.72133333333335,
+       "end": 89.99333333333335,
+       "text": "Across message sizes: for small messages, startup dominates and the logarithmic algorithms win."
+      },
+      {
+       "start": 90.27333333333335,
+       "end": 95.07333333333335,
+       "text": "For large ones the bandwidth term dominates, and ring and halving-doubling converge."
+      }
+     ]
+    },
+    {
+     "start": 95.62333333333335,
+     "end": 111.20200000000001,
+     "sentences": [
+      {
+       "start": 95.62333333333335,
+       "end": 100.40200000000002,
+       "text": "But the model left something out: it assumes every pair can talk at full speed at once."
+      },
+      {
+       "start": 100.68200000000002,
+       "end": 106.25000000000001,
+       "text": "A ring only talks to neighbors, which is gentle on any network that can lay a ring over itself."
+      },
+      {
+       "start": 106.53000000000002,
+       "end": 111.20200000000001,
+       "text": "Recursive halving starts by swapping half the vector with a partner half a machine away."
+      }
+     ]
+    },
+    {
+     "start": 111.75200000000001,
+     "end": 138.55733333333336,
+     "sentences": [
+      {
+       "start": 111.75200000000001,
+       "end": 116.97866666666667,
+       "text": "Put both on an oversubscribed tree: sixteen leaves of thirty-two machines, four-to-one."
+      },
+      {
+       "start": 117.25866666666667,
+       "end": 122.016,
+       "text": "Ring with ranks in order: no slowdown, since each leaf sends one stream upward."
+      },
+      {
+       "start": 122.296,
+       "end": 126.00800000000001,
+       "text": "Same ring with ranks shuffled across leaves: four times slower."
+      },
+      {
+       "start": 126.28800000000001,
+       "end": 133.75466666666668,
+       "text": "Recursive halving with ranks in order sends its biggest messages the farthest, through the uplinks: three point eight times slower."
+      },
+      {
+       "start": 134.03466666666668,
+       "end": 138.55733333333336,
+       "text": "Reorder so big messages go to near neighbors first, and it's one point oh nine."
+      }
+     ]
+    },
+    {
+     "start": 139.10733333333337,
+     "end": 158.65400000000005,
+     "sentences": [
+      {
+       "start": 139.10733333333337,
+       "end": 145.05933333333337,
+       "text": "Same cluster, same algorithms, a factor of four, decided entirely by who talks to whom."
+      },
+      {
+       "start": 145.33933333333337,
+       "end": 150.90733333333338,
+       "text": "That's why topology-aware libraries exist, and why your launcher's rank order is not a detail."
+      },
+      {
+       "start": 151.18733333333338,
+       "end": 158.65400000000005,
+       "text": "These numbers are from my idealized model, which sprays traffic perfectly across the spines, isolating placement from hashing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "place",
+   "title": "Placement",
+   "index": 12,
+   "start": 1160.4486666666667,
+   "dur": 110.97666666666667,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 8.411999999999999,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 3.2253333333333334,
+       "text": "Collectives assume you know where the ranks live."
+      },
+      {
+       "start": 3.5053333333333336,
+       "end": 8.411999999999999,
+       "text": "Placing them is the scheduler's job, and each topology asks something different of it."
+      }
+     ]
+    },
+    {
+     "start": 8.962,
+     "end": 35.57266666666667,
+     "sentences": [
+      {
+       "start": 8.962,
+       "end": 12.460666666666667,
+       "text": "On a fat tree, the scheduler must know which nodes share a leaf."
+      },
+      {
+       "start": 12.740666666666666,
+       "end": 22.746,
+       "text": "In Slurm you describe the switch hierarchy in topology.conf; the tree plugin finds the lowest switch that can hold the job and allocates best-fit beneath it."
+      },
+      {
+       "start": 23.026,
+       "end": 29.511333333333333,
+       "text": "Users can cap the number of leaf switches, and say how long they'll wait for it: trading queue time for locality."
+      },
+      {
+       "start": 29.791333333333334,
+       "end": 35.57266666666667,
+       "text": "A newer block topology allocates contiguous blocks of nodes, aiming to limit fragmentation."
+      }
+     ]
+    },
+    {
+     "start": 36.12266666666667,
+     "end": 60.29866666666667,
+     "sentences": [
+      {
+       "start": 36.12266666666667,
+       "end": 44.144,
+       "text": "On a torus, the problem is geometric: a job wants a contiguous box, and free nodes can add up to enough without forming one."
+      },
+      {
+       "start": 44.424,
+       "end": 52.40266666666667,
+       "text": "Slurm has a torus plugin; Tofu lets users ask for a shape; and Google's optical switches remove contiguity entirely."
+      },
+      {
+       "start": 52.68266666666667,
+       "end": 60.29866666666667,
+       "text": "Their paper says that without them, host availability would need to be ninety-nine point nine percent for reasonable slice goodput."
+      }
+     ]
+    },
+    {
+     "start": 60.84866666666667,
+     "end": 85.32333333333334,
+     "sentences": [
+      {
+       "start": 60.84866666666667,
+       "end": 66.28866666666667,
+       "text": "Dragonflies tolerate scattered placement if routing is adaptive, but studies found limits."
+      },
+      {
+       "start": 66.56866666666667,
+       "end": 72.542,
+       "text": "Bhatele and colleagues found hot spots on a few links for applications with few neighbors per task."
+      },
+      {
+       "start": 72.822,
+       "end": 85.32333333333334,
+       "text": "Yang and colleagues found that random placement with adaptive routing balances load, but communication-heavy jobs can degrade lighter ones, a bully effect, and a hybrid placement reduced the worst case."
+      }
+     ]
+    },
+    {
+     "start": 85.87333333333333,
+     "end": 109.32666666666668,
+     "sentences": [
+      {
+       "start": 85.87333333333333,
+       "end": 89.45733333333334,
+       "text": "HPE's answer was to fight interference in the network."
+      },
+      {
+       "start": 89.73733333333334,
+       "end": 97.05466666666668,
+       "text": "In its paper, worst-case congestion slowdown was one point three times on Slingshot against ninety-three on Aries."
+      },
+      {
+       "start": 97.33466666666668,
+       "end": 101.19600000000001,
+       "text": "Those are the authors' benchmarks, so treat them as a claim to test."
+      },
+      {
+       "start": 101.47600000000001,
+       "end": 109.32666666666668,
+       "text": "Across all of these, topology isn't a property of the cables alone: it's cables, routing, algorithm and placement, agreeing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "zoo",
+   "title": "The proprietary interconnects",
+   "index": 13,
+   "start": 1271.4253333333334,
+   "dur": 150.71866666666668,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 7.129333333333333,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 7.129333333333333,
+       "text": "Now a quick tour of the proprietary interconnects: what existed, why it was built, whether it still matters."
+      }
+     ]
+    },
+    {
+     "start": 7.679333333333333,
+     "end": 45.86066666666668,
+     "sentences": [
+      {
+       "start": 7.679333333333333,
+       "end": 17.023333333333333,
+       "text": "Myrinet, from Myricom: a cluster network with low-overhead switching and link-level flow control, when mainstream Ethernet was a hundred megabits."
+      },
+      {
+       "start": 17.303333333333335,
+       "end": 24.343333333333334,
+       "text": "In June two thousand five, Myricom reported a hundred forty-one TOP500 systems, twenty-eight percent."
+      },
+      {
+       "start": 24.623333333333335,
+       "end": 26.735333333333337,
+       "text": "By June two thousand fourteen, one."
+      },
+      {
+       "start": 27.015333333333338,
+       "end": 29.554000000000006,
+       "text": "Its assets were sold in two thousand thirteen."
+      },
+      {
+       "start": 29.834000000000007,
+       "end": 30.666000000000007,
+       "text": "History."
+      },
+      {
+       "start": 30.94600000000001,
+       "end": 44.51400000000001,
+       "text": "Quadrics QsNet, a fat-tree network with adapters that took communication work off the processor, powered six of the ten fastest machines in June two thousand three, and the company closed in June two thousand nine."
+      },
+      {
+       "start": 44.79400000000001,
+       "end": 45.86066666666668,
+       "text": "Also history."
+      }
+     ]
+    },
+    {
+     "start": 46.41066666666668,
+     "end": 74.87200000000001,
+     "sentences": [
+      {
+       "start": 46.41066666666668,
+       "end": 60.234666666666676,
+       "text": "IBM's Blue Gene put tens of thousands of simple nodes behind a torus, with tree and barrier networks; its last generation, Q, used a five-dimensional torus, and IBM then moved to other platforms."
+      },
+      {
+       "start": 60.51466666666668,
+       "end": 74.87200000000001,
+       "text": "Fujitsu's Tofu is the six-dimensional torus we met; the Fugaku version has six network interfaces per node and six point eight gigabytes a second per link, and Fugaku is number nine on the June two thousand twenty-six list."
+      }
+     ]
+    },
+    {
+     "start": 75.42200000000001,
+     "end": 104.59000000000002,
+     "sentences": [
+      {
+       "start": 75.42200000000001,
+       "end": 87.21933333333334,
+       "text": "Cray went from a three-dimensional torus to Aries in two thousand twelve, a dragonfly it described as fat-tree all-to-all bandwidth at torus-like cost, with at most five hops at any size."
+      },
+      {
+       "start": 87.49933333333334,
+       "end": 99.70200000000001,
+       "text": "Then Slingshot: sixty-four ports at two hundred gigabits, Ethernet-compatible, with hardware congestion management, aimed at InfiniBand's tuning difficulty and the gateways Ethernet needed."
+      },
+      {
+       "start": 99.98200000000001,
+       "end": 104.59000000000002,
+       "text": "It's the live one: El Capitan, Frontier, Aurora, and six of the top ten."
+      }
+     ]
+    },
+    {
+     "start": 105.14000000000001,
+     "end": 135.5906666666667,
+     "sentences": [
+      {
+       "start": 105.14000000000001,
+       "end": 114.99600000000001,
+       "text": "Intel's Omni-Path launched in two thousand fifteen as a lossless alternative to InfiniBand, ran Trinity and Cori, and was dropped by two thousand nineteen."
+      },
+      {
+       "start": 115.27600000000001,
+       "end": 123.29733333333334,
+       "text": "Cornelis Networks spun out in two thousand twenty, and launched four-hundred-gigabit CN5000 in two thousand twenty-five."
+      },
+      {
+       "start": 123.57733333333334,
+       "end": 133.092,
+       "text": "And the new number one, LineShine, is reported to use a proprietary interconnect called LingQi, described by one outlet as a multi-rail fat tree."
+      },
+      {
+       "start": 133.372,
+       "end": 135.5906666666667,
+       "text": "I couldn't confirm that from a second source."
+      }
+     ]
+    },
+    {
+     "start": 136.1406666666667,
+     "end": 149.0686666666667,
+     "sentences": [
+      {
+       "start": 136.1406666666667,
+       "end": 149.0686666666667,
+       "text": "My read, which is interpretation, not a sourced claim: the ones that died were out-competed on cost and volume by Ethernet and InfiniBand; the ones that survive are tied to a builder's whole machine."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "close",
+   "title": "Three ideas",
+   "index": 14,
+   "start": 1422.144,
+   "dur": 56.928666666666665,
+   "beats": [
+    {
+     "start": 0.9,
+     "end": 10.612000000000002,
+     "sentences": [
+      {
+       "start": 0.9,
+       "end": 2.2013333333333334,
+       "text": "Three ideas to keep."
+      },
+      {
+       "start": 2.4813333333333336,
+       "end": 5.169333333333334,
+       "text": "One: bisection is a ceiling, not a promise."
+      },
+      {
+       "start": 5.4493333333333345,
+       "end": 10.612000000000002,
+       "text": "The narrowest cut for your traffic decides what you get, and routing decides whether you reach it."
+      }
+     ]
+    },
+    {
+     "start": 11.162000000000003,
+     "end": 24.951333333333338,
+     "sentences": [
+      {
+       "start": 11.162000000000003,
+       "end": 13.764666666666669,
+       "text": "Two: every topology is a bet on traffic."
+      },
+      {
+       "start": 14.044666666666668,
+       "end": 16.007333333333335,
+       "text": "Neighbor-heavy science favors tori."
+      },
+      {
+       "start": 16.287333333333336,
+       "end": 19.146000000000004,
+       "text": "Permutations and collectives favor fat trees."
+      },
+      {
+       "start": 19.426000000000005,
+       "end": 24.951333333333338,
+       "text": "Cable-limited scale favors dragonflies and HyperX, if you trust the adaptive routing."
+      }
+     ]
+    },
+    {
+     "start": 25.50133333333334,
+     "end": 34.16533333333334,
+     "sentences": [
+      {
+       "start": 25.50133333333334,
+       "end": 29.426666666666673,
+       "text": "Three: wires, routing, algorithm and placement have to agree."
+      },
+      {
+       "start": 29.706666666666674,
+       "end": 34.16533333333334,
+       "text": "Change any one, and the same hardware can be several times faster or slower."
+      }
+     ]
+    },
+    {
+     "start": 34.71533333333334,
+     "end": 48.62733333333334,
+     "sentences": [
+      {
+       "start": 34.71533333333334,
+       "end": 45.787333333333336,
+       "text": "To test this on a real cluster, here's a suggestion of mine, not a standard method: measure all-to-all bandwidth inside one leaf, then across leaves, then across the whole machine."
+      },
+      {
+       "start": 46.06733333333334,
+       "end": 48.62733333333334,
+       "text": "The drop-offs are the blocking factors, measured."
+      }
+     ]
+    },
+    {
+     "start": 49.17733333333334,
+     "end": 55.27866666666667,
+     "sentences": [
+      {
+       "start": 49.17733333333334,
+       "end": 55.27866666666667,
+       "text": "Sources, and the status of every number, verified or modeled, are in the notes that come with this video."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "total": 1479.0726666666667,
+ "voice": "af_heart",
+ "speed": 1.0,
+ "sr": 24000
+}
