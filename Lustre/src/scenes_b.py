@@ -1,8 +1,9 @@
 import math, random, json
 from fx import *
 from lx import *
+from paths import DATA
 
-_SIM = json.load(open('sim_stripe.json'))
+_SIM = json.load(open(DATA / 'sim_stripe.json'))
 
 _TYP = {}
 def _typical(sc, K=100, F=3000):

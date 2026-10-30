@@ -1,20 +1,17 @@
 import sys, json, time, numpy as np, soundfile as sf
-sys.path.insert(0,'.')
 from script import SCRIPT
 from kokoro_onnx import Kokoro
-import os
-import os
-M=os.environ.get('KOKORO_MODELS','./models/')  # dir holding kokoro-v1.0.onnx + voices-v1.0.bin
-k=Kokoro(M+'kokoro-v1.0.onnx', M+'voices-v1.0.bin')
+from paths import DATA, MODELS, build_dir
+k=Kokoro(str(MODELS/'kokoro-v1.0.onnx'), str(MODELS/'voices-v1.0.bin'))
 VOICE=sys.argv[1] if len(sys.argv)>1 else 'am_michael'
-SPEED=float(sys.argv[2]) if len(sys.argv)>2 else 0.97
+SPEED=float(sys.argv[2]) if len(sys.argv)>2 else 1.04    # the delivered video used am_michael at 1.04
 SR=24000
 GAP=0.42      # seconds of silence after each line (a natural breath between ideas)
 LEAD=0.9      # silence before first line of a scene (lets the visual establish)
 TAIL=1.1      # silence after last line
-import os
+AUD=build_dir('audio'); TJ=DATA/'timing.json'
 ONLY=set(sys.argv[3].split(',')) if len(sys.argv)>3 else None
-timing=json.load(open('timing.json')) if (ONLY and os.path.exists('timing.json')) else {}
+timing=json.load(open(TJ)) if (ONLY and TJ.exists()) else {}
 t00=time.time()
 for sid,lines in SCRIPT:
     if ONLY and sid not in ONLY: continue
@@ -32,8 +29,8 @@ for sid,lines in SCRIPT:
         g=GAP if i<len(lines)-1 else TAIL
         chunks.append(np.zeros(int(g*SR),dtype=np.float32)); cur+=g
     audio=np.concatenate(chunks)
-    sf.write(f'audio/{sid}.wav', audio, SR)
+    sf.write(AUD/f'{sid}.wav', audio, SR)
     timing[sid]=dict(dur=round(len(audio)/SR,3), cues=cues, ends=[round(cues[i+1]-GAP,3) if i+1<len(cues) else round(cur-TAIL,3) for i in range(len(cues))])
     print(sid, timing[sid]['dur'], flush=True)
-json.dump(timing, open('timing.json','w'), indent=1)
+json.dump(timing, open(TJ,'w'), indent=1)
 print('total', sum(v['dur'] for v in timing.values()), 'elapsed', time.time()-t00)

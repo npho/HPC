@@ -5,6 +5,7 @@ Narrated, first-principles explainer videos on HPC systems. Each folder holds ev
 | Folder | Topic |
 |---|---|
 | [GPFS](GPFS/) | GPFS / IBM Storage Scale |
+| [Lustre](Lustre/) | Lustre parallel file system |
 
 ## Setup
 Requires [uv](https://docs.astral.sh/uv/) and ffmpeg with libx264 (macOS: `brew install uv ffmpeg`).
