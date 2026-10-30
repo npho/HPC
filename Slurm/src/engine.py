@@ -9,6 +9,7 @@ typography and layout (Pagella serif, hairline rules, direct labels, margin note
 """
 import math
 import skia
+from paths import font_path
 
 LW, LH = 1920, 1080
 
@@ -95,15 +96,14 @@ def appear(t, t0, d=0.5):
 
 
 # ------------------------------------------------------------------ fonts
-_FONT_DIR = "/usr/share/texmf/fonts/opentype/public/"
-_FACES = {
-    "body": _FONT_DIR + "tex-gyre/texgyrepagella-regular.otf",
-    "bold": _FONT_DIR + "tex-gyre/texgyrepagella-bold.otf",
-    "ital": _FONT_DIR + "tex-gyre/texgyrepagella-italic.otf",
-    "bital": _FONT_DIR + "tex-gyre/texgyrepagella-bolditalic.otf",
-    "mono": _FONT_DIR + "lm/lmmono10-regular.otf",
-    "math": _FONT_DIR + "lm-math/latinmodern-math.otf",
-    "sans": _FONT_DIR + "tex-gyre/texgyreheros-regular.otf",
+_FACES = {  # files in assets/fonts (scripts/fetch_assets.sh)
+    "body": "texgyrepagella-regular.otf",
+    "bold": "texgyrepagella-bold.otf",
+    "ital": "texgyrepagella-italic.otf",
+    "bital": "texgyrepagella-bolditalic.otf",
+    "mono": "lmmono10-regular.otf",
+    "math": "latinmodern-math.otf",
+    "sans": "texgyreheros-regular.otf",
 }
 _tf = {}
 _fonts = {}
@@ -115,7 +115,7 @@ def font(face, size):
     if f is None:
         tf = _tf.get(face)
         if tf is None:
-            tf = skia.Typeface.MakeFromFile(_FACES[face])
+            tf = skia.Typeface.MakeFromFile(font_path(_FACES[face]))
             _tf[face] = tf
         f = skia.Font(tf, size)
         f.setSubpixel(True)

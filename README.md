@@ -8,6 +8,7 @@ Narrated, first-principles explainer videos on HPC systems. Each folder holds ev
 | [Eth-IB](Eth-IB/) | InfiniBand vs Ethernet |
 | [GPFS](GPFS/) | GPFS / IBM Storage Scale |
 | [Lustre](Lustre/) | Lustre parallel file system |
+| [Slurm](Slurm/) | Slurm workload manager |
 
 ## Setup
 Requires [uv](https://docs.astral.sh/uv/) and ffmpeg with libx264 (macOS: `brew install uv ffmpeg`).

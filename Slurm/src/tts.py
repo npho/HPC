@@ -1,12 +1,11 @@
 """
-audio.py - synthesize the narration (Kokoro-82M via kokoro-onnx, runs offline on CPU) and build
-build/timeline.json: for every scene, the start time of each beat and the scene duration.
+tts.py - synthesize the narration (Kokoro-82M via kokoro-onnx, runs offline on CPU) and build
+data/timing.json: for every scene, the start time of each beat and the scene duration.
 
-  python audio.py            # synthesize everything (cached by text hash)
-  VOICE=am_michael python audio.py   # try another voice
+  python tts.py            # synthesize everything (cached by text hash)
+  VOICE=am_michael python tts.py   # try another voice
 
-Model files (Apache-2.0 Kokoro weights) are fetched from the kokoro-onnx GitHub release:
-  assets/models/kokoro-v1.0.onnx, assets/models/voices-v1.0.bin
+Model files (Apache-2.0 Kokoro weights) come from scripts/fetch_assets.sh (assets/models, or set KOKORO_DIR).
 """
 import hashlib
 import json
@@ -18,9 +17,8 @@ import numpy as np
 import soundfile as sf
 
 from script import SCENES
+from paths import BUILD, DATA, MODELS
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build")
 AUD = os.path.join(BUILD, "audio")
 VOICE = os.environ.get("VOICE", "af_heart")
 SPEED = float(os.environ.get("SPEED", "0.97"))
@@ -87,8 +85,7 @@ def beat_wav(kokoro, text, voice, speed):
 def main():
     os.makedirs(AUD, exist_ok=True)
     from kokoro_onnx import Kokoro
-    k = Kokoro(os.path.join(HERE, "assets/models/kokoro-v1.0.onnx"),
-               os.path.join(HERE, "assets/models/voices-v1.0.bin"))
+    k = Kokoro(str(MODELS / "kokoro-v1.0.onnx"), str(MODELS / "voices-v1.0.bin"))
     timeline = []
     t_global = 0.0
     for sc in SCENES:
@@ -115,9 +112,9 @@ def main():
         out = os.path.join(AUD, f"{sc['id']}.wav")
         sf.write(out, audio, SR)
         timeline.append(dict(id=sc["id"], chapter=sc["chapter"], cues=cues, ends=ends,
-                             duration=frames / FPS, frames=frames, start=t_global, wav=out))
+                             duration=frames / FPS, frames=frames, start=t_global))
         t_global += frames / FPS
-    with open(os.path.join(BUILD, "timeline.json"), "w") as fh:
+    with open(DATA / "timing.json", "w") as fh:
         json.dump(dict(voice=VOICE, speed=SPEED, fps=FPS, total=t_global, scenes=timeline), fh, indent=1)
     print(f"total {t_global/60:.2f} min")
 

@@ -13,9 +13,9 @@ tl = render.timeline()
 entry = next(s for s in tl["scenes"] if s["id"] == sid)
 spec = reg[sid]
 cv = Cv(width, width * 9 // 16)
-os.makedirs(os.path.join(render.BUILD, "preview"), exist_ok=True)
+os.makedirs(os.path.join(render.BUILD, "stills"), exist_ok=True)
 for t in times:
     render.draw_frame(cv, entry, spec, t)
-    p = os.path.join(render.BUILD, "preview", f"{sid}_{t:06.2f}.png")
+    p = os.path.join(render.BUILD, "stills", f"{sid}_{t:06.2f}.png")
     cv.save_png(p)
     print(p)

@@ -6,7 +6,7 @@ timed from the synthesized length of each beat, and every animation is keyed to 
 picture and voice stay locked together without word-level alignment.
 
 The narration deliberately does NOT read the on-screen labels; it explains what the picture shows.
-Technical tokens are written naturally here; audio.py respells them for the speech engine.
+Technical tokens are written naturally here; tts.py respells them for the speech engine.
 """
 
 SCENES = [

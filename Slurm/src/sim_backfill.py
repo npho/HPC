@@ -13,7 +13,7 @@ What it models
   * user estimate = min(f * true_runtime, 48 h)   ("f-model", as in Mu'alem & Feitelson 2001)
   * jobs are never killed at their limit (estimate >= runtime always holds here)
 
-Outputs results/backfill_sweep.json, consumed by the video scene and the notes file.
+Outputs data/backfill_sweep.json, consumed by the video scene and the notes file.
 """
 import json
 import math
@@ -218,9 +218,8 @@ def main():
         d = cur - base
         summary["f=%g" % f]["paired_dwait_vs_f1"] = (float(d.mean()), float(1.96 * d.std(ddof=1) / math.sqrt(len(d))) if f != 1.0 else 0.0)
     out["summary"] = summary
-    import os
-    os.makedirs("results", exist_ok=True)
-    with open("results/backfill_sweep.json", "w") as fh:
+    from paths import DATA
+    with open(DATA / "backfill_sweep.json", "w") as fh:
         json.dump(out, fh, indent=1)
     print(json.dumps(summary, indent=1))
 

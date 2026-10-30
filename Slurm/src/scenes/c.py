@@ -2,6 +2,7 @@
 import json, math, os
 from engine import *
 from scenes.common import *
+from paths import DATA
 
 SCENES = {}
 
@@ -254,10 +255,10 @@ def gantt_frame(cv, a, title, ox=0):
     cv.text("nodes", GX - 16, GY - 6, 17, "dim", "ital", "r", a)
 
 
-@scene("s08_backfill", "Backfill", ["sched_config · slurm.conf(5): SchedulerParameters (bf_*) · Mu'alem & Feitelson 2001 (IEEE TPDS 12:529) · results/backfill_sweep.json"])
+@scene("s08_backfill", "Backfill", ["sched_config · slurm.conf(5): SchedulerParameters (bf_*) · Mu'alem & Feitelson 2001 (IEEE TPDS 12:529) · data/backfill_sweep.json"])
 def s08(cv, t, S):
     headline(cv, "Backfill: look ahead, don't line up", t, 0.3, "ink")
-    sw = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "results/backfill_sweep.json")))["summary"]
+    sw = json.load(open(DATA / "backfill_sweep.json"))["summary"]
     g01 = (1 - appear(t, S.c(2, -0.3), 0.8))
     # ---- Gantt part (beats 0-1)
     if g01 > 0.01:

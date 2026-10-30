@@ -2,6 +2,7 @@
 render.py - render scenes to 4K H.264 with hold-frame detection, then mux narration.
 
   python render.py scene s05_job          # render one scene (video only) -> build/video/s05_job.mp4
+  python render.py smoke s05_job 60       # first 60 frames at 1080p -> build/video/s05_job_smoke.mp4
   python render.py all                    # all scenes
   python render.py final                  # concat + audio mux -> out/slurm_first_principles_4k.mp4
 Env: SCALE=2 (4K), 1 (1080p); CRF; PRESET
@@ -12,8 +13,7 @@ import skia
 from engine import Cv, LW, LH, PAL, col
 from scenes.common import hud, Timing
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-BUILD = os.path.join(HERE, "build")
+from paths import BUILD, DATA, OUT
 SCENE_MODULES = ["scenes.a", "scenes.b", "scenes.c", "scenes.d"]
 
 
@@ -31,7 +31,7 @@ def load_registry():
 
 
 def timeline():
-    with open(os.path.join(BUILD, "timeline.json")) as fh:
+    with open(DATA / "timing.json") as fh:
         return json.load(fh)
 
 
@@ -56,7 +56,7 @@ def pixfmt(cv):
     return "bgra" if ct == skia.kBGRA_8888_ColorType else "rgba"
 
 
-def render_scene(sid, scale=None, out=None, preset=None, crf=None, fps=30):
+def render_scene(sid, scale=None, out=None, preset=None, crf=None, fps=30, limit=None):
     scale = int(os.environ.get("SCALE", "2")) if scale is None else scale
     preset = preset or os.environ.get("PRESET", "veryfast")
     crf = crf or os.environ.get("CRF", "20")
@@ -74,7 +74,7 @@ def render_scene(sid, scale=None, out=None, preset=None, crf=None, fps=30):
            "-pix_fmt", "yuv420p", "-profile:v", "high", "-g", "60", "-tune", "animation",
            "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-r", str(fps), out]
     ff = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    frames = entry["frames"]
+    frames = entry["frames"] if limit is None else min(limit, entry["frames"])
     last_probe, last_full = None, None
     n_full = 0
     t0 = time.time()
@@ -108,7 +108,7 @@ def final(out_path, with_audio=True):
     awl = os.path.join(BUILD, "audio_concat.txt")
     with open(awl, "w") as fh:
         for s in tl["scenes"]:
-            fh.write(f"file '{s['wav']}'\n")
+            fh.write(f"file '{os.path.join(BUILD, 'audio', s['id'] + '.wav')}'\n")
     full_wav = os.path.join(BUILD, "narration_full.wav")
     subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", awl,
                            "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-ar", "48000", full_wav])
@@ -128,4 +128,7 @@ if __name__ == "__main__":
         for s in timeline()["scenes"]:
             render_scene(s["id"])
     elif cmd == "final":
-        final(sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "out", "slurm_first_principles_4k.mp4"))
+        final(sys.argv[2] if len(sys.argv) > 2 else os.path.join(OUT, "slurm_first_principles_4k.mp4"))
+    elif cmd == "smoke":
+        sid = sys.argv[2]
+        render_scene(sid, scale=1, out=os.path.join(BUILD, "video", f"{sid}_smoke.mp4"), limit=int(sys.argv[3]) if len(sys.argv) > 3 else 60)
